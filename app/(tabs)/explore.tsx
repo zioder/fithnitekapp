@@ -1,109 +1,181 @@
-import { StyleSheet, Image, Platform } from 'react-native';
+import React, { useState } from 'react';
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+  ScrollView,
+} from 'react-native';
 
-import { Collapsible } from '@/components/Collapsible';
-import { ExternalLink } from '@/components/ExternalLink';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
-import { IconSymbol } from '@/components/ui/IconSymbol';
+const SignUpScreen = () => {
+  const [showPassword, setShowPassword] = useState(false);
 
-export default function TabTwoScreen() {
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#D0D0D0', dark: '#353636' }}
-      headerImage={
-        <IconSymbol
-          size={310}
-          color="#808080"
-          name="chevron.left.forwardslash.chevron.right"
-          style={styles.headerImage}
+    <ScrollView contentContainerStyle={styles.container}>
+      {/* Back Button */}
+      <TouchableOpacity>
+        <Text style={styles.backText}>← Back</Text>
+      </TouchableOpacity>
+
+      {/* Title */}
+      <Text style={styles.title}>Sign up with your email or phone number</Text>
+
+      {/* Input Fields */}
+      <TextInput style={styles.input} placeholder="Name" />
+      <TextInput style={styles.input} placeholder="Email" keyboardType="email-address" />
+      <View style={styles.rowInput}>
+        <Text style={styles.prefix}>+216</Text>
+        <TextInput
+          style={[styles.input, { flex: 1, marginLeft: 10 }]}
+          placeholder="Your mobile number"
+          keyboardType="phone-pad"
         />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Explore</ThemedText>
-      </ThemedView>
-      <ThemedText>This app includes example code to help you get started.</ThemedText>
-      <Collapsible title="File-based routing">
-        <ThemedText>
-          This app has two screens:{' '}
-          <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> and{' '}
-          <ThemedText type="defaultSemiBold">app/(tabs)/explore.tsx</ThemedText>
-        </ThemedText>
-        <ThemedText>
-          The layout file in <ThemedText type="defaultSemiBold">app/(tabs)/_layout.tsx</ThemedText>{' '}
-          sets up the tab navigator.
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/router/introduction">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Android, iOS, and web support">
-        <ThemedText>
-          You can open this project on Android, iOS, and the web. To open the web version, press{' '}
-          <ThemedText type="defaultSemiBold">w</ThemedText> in the terminal running this project.
-        </ThemedText>
-      </Collapsible>
-      <Collapsible title="Images">
-        <ThemedText>
-          For static images, you can use the <ThemedText type="defaultSemiBold">@2x</ThemedText> and{' '}
-          <ThemedText type="defaultSemiBold">@3x</ThemedText> suffixes to provide files for
-          different screen densities
-        </ThemedText>
-        <Image source={require('@/assets/images/react-logo.png')} style={{ alignSelf: 'center' }} />
-        <ExternalLink href="https://reactnative.dev/docs/images">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Custom fonts">
-        <ThemedText>
-          Open <ThemedText type="defaultSemiBold">app/_layout.tsx</ThemedText> to see how to load{' '}
-          <ThemedText style={{ fontFamily: 'SpaceMono' }}>
-            custom fonts such as this one.
-          </ThemedText>
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/versions/latest/sdk/font">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Light and dark mode components">
-        <ThemedText>
-          This template has light and dark mode support. The{' '}
-          <ThemedText type="defaultSemiBold">useColorScheme()</ThemedText> hook lets you inspect
-          what the user's current color scheme is, and so you can adjust UI colors accordingly.
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/develop/user-interface/color-themes/">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Animations">
-        <ThemedText>
-          This template includes an example of an animated component. The{' '}
-          <ThemedText type="defaultSemiBold">components/HelloWave.tsx</ThemedText> component uses
-          the powerful <ThemedText type="defaultSemiBold">react-native-reanimated</ThemedText>{' '}
-          library to create a waving hand animation.
-        </ThemedText>
-        {Platform.select({
-          ios: (
-            <ThemedText>
-              The <ThemedText type="defaultSemiBold">components/ParallaxScrollView.tsx</ThemedText>{' '}
-              component provides a parallax effect for the header image.
-            </ThemedText>
-          ),
-        })}
-      </Collapsible>
-    </ParallaxScrollView>
+      </View>
+      <View style={styles.passwordContainer}>
+        <TextInput
+          style={[styles.input, { flex: 1 }]}
+          placeholder="Enter Your Password"
+          secureTextEntry={!showPassword}
+        />
+        <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
+          <Text style={styles.togglePassword}>{showPassword ? "🙈" : "👁️"}</Text>
+        </TouchableOpacity>
+      </View>
+
+      {/* Terms and Conditions */}
+      <Text style={styles.termsText}>
+        By signing up, you agree to the{" "}
+        <Text style={styles.linkText}>Terms of service</Text> and{" "}
+        <Text style={styles.linkText}>Privacy policy</Text>.
+      </Text>
+
+      {/* Sign Up Button */}
+      <TouchableOpacity style={styles.signUpButton}>
+        <Text style={styles.signUpText}>Sign Up</Text>
+      </TouchableOpacity>
+
+      {/* Social Signup Options */}
+      <Text style={styles.orText}>or</Text>
+      <TouchableOpacity style={styles.socialButton}>
+        <Text style={styles.socialText}>📧 Sign up with Gmail</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.socialButton}>
+        <Text style={styles.socialText}>📘 Sign up with Facebook</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.socialButton}>
+        <Text style={styles.socialText}>🍎 Sign up with Apple</Text>
+      </TouchableOpacity>
+
+      {/* Footer */}
+      <Text style={styles.footerText}>
+        Don’t have an account?{" "}
+        <Text style={styles.linkText}>Sign In</Text>
+      </Text>
+    </ScrollView>
   );
-}
+};
 
 const styles = StyleSheet.create({
-  headerImage: {
-    color: '#808080',
-    bottom: -90,
-    left: -35,
-    position: 'absolute',
+  container: {
+    flexGrow: 1,
+    backgroundColor: "#fff",
+    padding: 20,
   },
-  titleContainer: {
-    flexDirection: 'row',
-    gap: 8,
+  backText: {
+    fontSize: 16,
+    color: "#000",
+    marginBottom: 20,
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: "600",
+    marginBottom: 20,
+    color: "#000",
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 8,
+    padding: 10,
+    marginBottom: 15,
+    fontSize: 16,
+    backgroundColor: "#f9f9f9",
+  },
+  rowInput: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 15,
+  },
+  prefix: {
+    fontSize: 16,
+    color: "#000",
+    padding: 10,
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 8,
+    backgroundColor: "#f9f9f9",
+  },
+  passwordContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 8,
+    marginBottom: 15,
+    paddingHorizontal: 10,
+    backgroundColor: "#f9f9f9",
+  },
+  togglePassword: {
+    fontSize: 18,
+    marginLeft: 10,
+  },
+  termsText: {
+    fontSize: 14,
+    color: "#666",
+    textAlign: "center",
+    marginBottom: 20,
+  },
+  linkText: {
+    color: "#007BFF",
+    fontWeight: "500",
+  },
+  signUpButton: {
+    backgroundColor: "#FF5630",
+    paddingVertical: 15,
+    borderRadius: 8,
+    marginBottom: 20,
+    alignItems: "center",
+  },
+  signUpText: {
+    color: "#fff",
+    fontSize: 16,
+    fontWeight: "600",
+  },
+  orText: {
+    fontSize: 16,
+    color: "#666",
+    textAlign: "center",
+    marginVertical: 10,
+  },
+  socialButton: {
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 8,
+    paddingVertical: 15,
+    marginBottom: 15,
+    alignItems: "center",
+  },
+  socialText: {
+    fontSize: 16,
+    color: "#000",
+  },
+  footerText: {
+    fontSize: 14,
+    color: "#666",
+    textAlign: "center",
+    marginTop: 20,
   },
 });
+
+export default SignUpScreen;

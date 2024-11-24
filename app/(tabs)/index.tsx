@@ -23,12 +23,12 @@ const WelcomeScreen = () => {
   
         {/* Buttons */}
         <View>
-          <TouchableOpacity 
+            <TouchableOpacity 
             style={styles.signUpButton} 
-            onPress={() => {}}  // Updated path
-          >
+            onPress={() => router.push('/explore')}  // Updated path
+            >
             <Text style={styles.signUpText}>Sign Up</Text>
-          </TouchableOpacity>
+            </TouchableOpacity>
   
           <TouchableOpacity onPress={() => router.push('/(tabs)')}>
             <Text style={styles.logInText}>Log in</Text>
