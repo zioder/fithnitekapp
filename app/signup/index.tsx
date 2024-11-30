@@ -7,15 +7,25 @@ import {
   StyleSheet,
   ScrollView,
 } from 'react-native';
+import { useRouter } from 'expo-router';
+import { useFonts } from 'expo-font';
+
 
 const SignUpScreen = () => {
   const [showPassword, setShowPassword] = useState(false);
 
+  const [loaded] = useFonts({
+    SpaceMono: require('../../assets/fonts/SpaceMono-Regular.ttf'),
+    Poppins: require("../../assets/fonts/Poppins-Regular.ttf")
+  });
+
+  const router = useRouter()
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
       {/* Back Button */}
-      <TouchableOpacity>
-        <Text style={styles.backText}>← Back</Text>
+      <TouchableOpacity onPress={()=>{router.push("/")}}>
+        <Text style={styles.backText}> {"<"} Back</Text>
       </TouchableOpacity>
 
       {/* Title */}
@@ -27,14 +37,14 @@ const SignUpScreen = () => {
       <View style={styles.rowInput}>
         <Text style={styles.prefix}>+216</Text>
         <TextInput
-          style={[styles.input, { flex: 1, marginLeft: 10 }]}
+          style={[styles.phoneNumberinput, { flex: 1, marginLeft: 0 }]}
           placeholder="Your mobile number"
           keyboardType="phone-pad"
         />
       </View>
-      <View style={styles.passwordContainer}>
+       <View style={styles.passwordContainer}>
         <TextInput
-          style={[styles.input, { flex: 1 }]}
+          style={[styles.passwordInput, { flex: 1 }]}
           placeholder="Enter Your Password"
           secureTextEntry={!showPassword}
         />
@@ -69,8 +79,8 @@ const SignUpScreen = () => {
 
       {/* Footer */}
       <Text style={styles.footerText}>
-        Don’t have an account?{" "}
-        <Text style={styles.linkText}>Sign In</Text>
+        Already have an account?{" "}
+        <Text onPress={()=>{router.push("/login")}} style={styles.linkText}>Sign In</Text>
       </Text>
     </ScrollView>
   );
@@ -78,20 +88,27 @@ const SignUpScreen = () => {
 
 const styles = StyleSheet.create({
   container: {
+    paddingTop:60,
     flexGrow: 1,
     backgroundColor: "#fff",
     padding: 20,
+    fontFamily:"Poppins"
+
   },
   backText: {
     fontSize: 16,
     color: "#000",
     marginBottom: 20,
+    fontFamily:"Poppins"
+
   },
   title: {
     fontSize: 20,
     fontWeight: "600",
     marginBottom: 20,
     color: "#000",
+    fontFamily:"Poppins"
+
   },
   input: {
     borderWidth: 1,
@@ -101,11 +118,15 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     fontSize: 16,
     backgroundColor: "#f9f9f9",
+    fontFamily:"Poppins"
+
   },
   rowInput: {
     flexDirection: "row",
     alignItems: "center",
     marginBottom: 15,
+    fontFamily:"Poppins"
+
   },
   prefix: {
     fontSize: 16,
@@ -113,8 +134,10 @@ const styles = StyleSheet.create({
     padding: 10,
     borderWidth: 1,
     borderColor: "#ccc",
-    borderRadius: 8,
+    borderRadius: 2,
     backgroundColor: "#f9f9f9",
+    fontFamily:"Poppins"
+
   },
   passwordContainer: {
     flexDirection: "row",
@@ -125,20 +148,28 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     paddingHorizontal: 10,
     backgroundColor: "#f9f9f9",
+    fontFamily:"Poppins"
+
   },
   togglePassword: {
     fontSize: 18,
     marginLeft: 10,
+    fontFamily:"Poppins"
+
   },
   termsText: {
     fontSize: 14,
     color: "#666",
     textAlign: "center",
     marginBottom: 20,
+    fontFamily:"Poppins"
+
   },
   linkText: {
     color: "#007BFF",
     fontWeight: "500",
+    fontFamily:"Poppins"
+
   },
   signUpButton: {
     backgroundColor: "#FF5630",
@@ -146,17 +177,23 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     marginBottom: 20,
     alignItems: "center",
+    fontFamily:"Poppins"
+
   },
   signUpText: {
     color: "#fff",
     fontSize: 16,
     fontWeight: "600",
+    fontFamily:"Poppins"
+
   },
   orText: {
     fontSize: 16,
     color: "#666",
     textAlign: "center",
     marginVertical: 10,
+    fontFamily:"Poppins"
+
   },
   socialButton: {
     borderWidth: 1,
@@ -165,17 +202,44 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     marginBottom: 15,
     alignItems: "center",
+    fontFamily:"Poppins"
+
   },
   socialText: {
     fontSize: 16,
     color: "#000",
+    fontFamily:"Poppins"
+
   },
   footerText: {
     fontSize: 14,
     color: "#666",
     textAlign: "center",
     marginTop: 20,
+    fontFamily:"Poppins"
+
   },
+  passwordInput: {
+    padding: 10,
+    marginBottom: 0,
+    fontSize: 16,
+    backgroundColor: "#f9f9f9",
+    fontFamily:"Poppins"
+
+  },
+  phoneNumberinput:{
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 2,
+    padding: 10,
+    marginBottom: 0,
+    fontSize: 16,
+    backgroundColor: "#f9f9f9",
+    fontFamily:"Poppins"
+
+
+  }
+  
 });
 
 export default SignUpScreen;
