@@ -3,7 +3,7 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet } from "react-nativ
 import { Ionicons } from "@expo/vector-icons";
 import DateTimePicker from "@react-native-community/datetimepicker";
 
-export default function FindRide() {
+export default function PublishRide() {
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
   const [date, setDate] = useState(new Date());
@@ -20,21 +20,22 @@ export default function FindRide() {
   return (
     <View style={styles.container}>
          <View style={styles.ss_container}>
-      <Text style={styles.title}>Find a ride</Text>
-      <Text style={styles.label}>Where are you going ?</Text>
+      <Text style={styles.title}>Publish a ride</Text>
+      <Text style={styles.label}>Origin :</Text>
       <TextInput
         style={styles.input}
-        placeholder="From"
+        placeholder="Enter starting point"
         value={from}
         onChangeText={setFrom}
       />
+      <Text style={styles.label}>Destination :</Text>
       <TextInput
         style={styles.input}
-        placeholder="To"
+        placeholder="Enter destination"
         value={to}
         onChangeText={setTo}
       />
-     <Text style={styles.label}>When</Text>
+     <Text style={styles.label}>Date and Time :</Text>
       <TouchableOpacity style={styles.input} onPress={() => setShowPicker(true)}>
         <Text>{date.toLocaleString()}</Text>
       </TouchableOpacity>
@@ -47,23 +48,23 @@ export default function FindRide() {
         />
       )}
 
-        <Text style={styles.label}>Seats needed?</Text>
+        <Text style={styles.label}>Seats Available?</Text>
         <View style={styles.seatControls}>
           <TouchableOpacity
             onPress={() => setSeats(Math.max(1, seats - 1))}
           >
-            <Ionicons name="remove-circle-outline" size={25} color="black" />
+            <Ionicons name="remove-circle-outline" size={24} color="black" />
           </TouchableOpacity>
           <Text style={styles.seatCount}>{seats}</Text>
           <TouchableOpacity onPress={() => setSeats(seats + 1)}>
-            <Ionicons name="add-circle-outline" size={25} color="black" />
+            <Ionicons name="add-circle-outline" size={24} color="black" />
           </TouchableOpacity>
         </View>
       </View>
       <View style={styles.button}>
       <TouchableOpacity >
-    <Text style={styles.buttonText}>Find Ride</Text>
-  </TouchableOpacity>
+               <Text style={styles.buttonText}>Publish Ride</Text>
+      </TouchableOpacity>
   </View>
     </View>
 
@@ -79,6 +80,9 @@ const styles = StyleSheet.create({
         alignItems: "stretch", // Stretch components horizontally
         backgroundColor: "#fff",
     },
+    lineBreak: {
+        height: 20, // Space to simulate a line break
+      },
   container: {
     flex: 1,
     padding: 20,
@@ -117,8 +121,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   seatCount: {
-    fontSize: 20,
-    marginHorizontal: "5%",
+    fontSize: 16,
+    marginHorizontal: 20,
   },
   button: {
     backgroundColor: "#FF5A5F",
