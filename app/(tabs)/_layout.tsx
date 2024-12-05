@@ -25,7 +25,9 @@ export default function TabLayout() {
           },
           default: {},
         }),
-      }}>
+      }}
+    >
+      {/* Welcome Tab */}
       <Tabs.Screen
         name="index"
         options={{
@@ -33,11 +35,20 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
         }}
       />
+      {/* Sign Up Tab */}
       <Tabs.Screen
         name="explore"
         options={{
           title: 'Sign Up',
           tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
+        }}
+      />
+      {/* Search Tab */}
+      <Tabs.Screen
+        name="search"
+        options={{
+          title: 'Search',
+          tabBarIcon: ({ color }) => <IconSymbol size={28} name="magnifyingglass" color={color} />,
         }}
       />
     </Tabs>
