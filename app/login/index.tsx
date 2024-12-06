@@ -52,7 +52,7 @@ const LoginScreen = () => {
      
 
       {/* Sign Up Button */}
-      <TouchableOpacity style={styles.signUpButton}>
+      <TouchableOpacity style={styles.signUpButton} onPress={()=>{router.push('/rideonway')}} >
         <Text style={styles.signUpText}>Log in</Text>
       </TouchableOpacity>
 

@@ -35,6 +35,7 @@ export default function RootLayout() {
         <Stack.Screen name="+not-found" />
         <Stack.Screen name="login/index" options={{ headerShown: false }} />
         <Stack.Screen name="signup/index" options={{ headerShown: false }} />
+        <Stack.Screen name="rideonway/index" options={{ headerShown: false }} />
 
 
       </Stack>
