@@ -123,8 +123,9 @@ const styles = StyleSheet.create({
         padding: 20,
     },
     backButton: {
-        width: 24,
-        height: 24,
+        marginTop: 60,
+        width: 39,
+        height: 39,
         resizeMode: 'contain',
     },
     headerTitle: {
