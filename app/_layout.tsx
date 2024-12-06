@@ -15,6 +15,7 @@ export default function RootLayout() {
   const colorScheme = useColorScheme();
   const [loaded] = useFonts({
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
+    Poppins: require("../assets/fonts/Poppins-Regular.ttf")
   });
 
   useEffect(() => {
@@ -32,8 +33,12 @@ export default function RootLayout() {
       <Stack>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="+not-found" />
+        <Stack.Screen name="login/index" options={{ headerShown: false }} />
+        <Stack.Screen name="signup/index" options={{ headerShown: false }} />
+
+
       </Stack>
-      <StatusBar style="auto" />
+      <StatusBar style="auto"/>
     </ThemeProvider>
   );
 }
