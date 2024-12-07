@@ -24,7 +24,9 @@ export default function TabLayout() {
           },
           default: {},
         }),
-      }}>
+      }}
+    >
+      {/* Welcome Tab */}
       <Tabs.Screen
         name="index"
         options={{
@@ -59,6 +61,15 @@ export default function TabLayout() {
         options={{
           title: 'Publish a ride',
           tabBarIcon: ({ color }) =>  <IconSymbol size={28} name="plus.circle" color={color} />,
+        }}
+      />
+      
+      {/* Search Tab */}
+      <Tabs.Screen
+        name="search"
+        options={{
+          title: 'Search',
+          tabBarIcon: ({ color }) => <IconSymbol size={28} name="magnifyingglass" color={color} />,
         }}
       />
     </Tabs>
