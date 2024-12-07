@@ -36,6 +36,9 @@ export default function RootLayout() {
         <Stack.Screen name="login/index" options={{ headerShown: false }} />
         <Stack.Screen name="signup/index" options={{ headerShown: false }} />
         <Stack.Screen name="rideonway/index" options={{ headerShown: false }} />
+        <Stack.Screen name="trackride/index" options={{ headerShown: false }} />
+
+
 
 
       </Stack>
