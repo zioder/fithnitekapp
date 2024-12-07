@@ -78,13 +78,15 @@ const ConfirmPickupScreen = () => {
 </View>
 <View style={{ 
   flexDirection: 'row',
+  justifyContent: 'space-evenly',
   alignItems: 'center',
-  padding: 5}}>
+  padding: 5,
+  width :"100%"}}>
 <Image
         source={require('@/assets/images/marker.png')}
         style={{ width: 40, height: 40 }}
       />
-      <Text>In front of IBISS hotel </Text>
+      <Text style={styles.locationText}>In front of IBISS hotel </Text>
 </View>
       <TouchableOpacity style={styles.confirmButton}>
         <Text style={styles.confirmText}>Confirm Location</Text>
@@ -120,7 +122,7 @@ const styles = StyleSheet.create({
   },
   pickupLocation: {
     padding: 16,
-    backgroundColor: '#f2f2f2',
+    backgroundColor: '#fff',
   },
   pickupText: {
     fontSize: 16,
@@ -147,7 +149,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     alignItems: 'center',
     padding: 10,
-    backgroundColor: '#f2f2f2',
+    backgroundColor: '#fff',
   },
   navButton: {
     alignItems: 'center',
@@ -156,6 +158,11 @@ const styles = StyleSheet.create({
     fontSize: 12,
     marginTop: 5,
   },
+  locationText: {
+    fontSize: 20,
+    color: "#FF5630",
+    fontWeight : "bold"
+  }
 });
 
 export default ConfirmPickupScreen;
