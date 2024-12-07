@@ -85,44 +85,7 @@ export default function SearchRide() {
                 <Text style={styles.searchButtonText}>Search</Text>
             </TouchableOpacity>
 
-            {/* Footer Navigation */}
-            <View style={styles.footer}>
-                <TouchableOpacity style={styles.footerButton}>
-                    <Image
-                        source={require('@/assets/images/lista.png')} // Replace with your icon
-                        style={styles.footerIcon}
-                    />
-                    <Text style={styles.footerText}>Your rides</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.footerButton}>
-                    <Image
-                        source={require('@/assets/images/search.png')} // Replace with your icon
-                        style={[styles.footerIcon, styles.activeIcon]} // Highlight for active page
-                    />
-                    <Text style={[styles.footerText, styles.activeText]}>Search</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.footerButton}>
-                    <Image
-                        source={require('@/assets/images/plus.png')} // Replace with your icon
-                        style={styles.footerIcon}
-                    />
-                    <Text style={styles.footerText}>Publish</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.footerButton}>
-                    <Image
-                        source={require('@/assets/images/inbox2.png')} // Replace with your icon
-                        style={styles.footerIcon}
-                    />
-                    <Text style={styles.footerText}>Inbox</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.footerButton}>
-                    <Image
-                        source={require('@/assets/images/profile.png')} // Replace with your icon
-                        style={styles.footerIcon}
-                    />
-                    <Text style={styles.footerText}>Profile</Text>
-                </TouchableOpacity>
-            </View>
+        
         </View>
     );
 }
