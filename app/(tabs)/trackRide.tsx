@@ -3,6 +3,11 @@ import MapView from 'react-native-maps';
 import { StyleSheet, View, TouchableOpacity , Text} from 'react-native';
 import { useRouter } from 'expo-router';
 import RideDetailsCard from '@/components/ui/ride/RideDetailsCard';
+import MapViewDirections from 'react-native-maps-directions';
+
+const origin = {latitude: 37.3318456, longitude: -122.0296002};
+const destination = {latitude: 37.771707, longitude: -122.4053769};
+const GOOGLE_MAPS_APIKEY = 'AIzaSyAeL0NOt9Z0u3wdU451MynINYppACDdcJY';
 
 
 export default function trackRide() {
@@ -21,7 +26,14 @@ export default function trackRide() {
       </View>
     
       <View style={styles.mapWrapper}>
-          <MapView style={styles.map} />
+          <MapView style={styles.map}>
+          <MapViewDirections
+              origin={origin}
+              destination={destination}
+              apikey={GOOGLE_MAPS_APIKEY}
+  />
+
+          </MapView>
       </View>
       <RideDetailsCard
   duration="1hr 22min"

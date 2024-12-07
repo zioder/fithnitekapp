@@ -5,9 +5,11 @@ import { useRouter } from 'expo-router';
 import RideDetailsCard from '@/components/ui/ride/RideDetailsCard';
 
 
+
 export default function trackRide() {
 
   const router = useRouter();
+
 
   return (
     <View style={styles.container}>
@@ -21,7 +23,25 @@ export default function trackRide() {
       </View>
     
       <View style={styles.mapWrapper}>
-          <MapView style={styles.map} />
+          <MapView 
+          style={styles.map} 
+          mapType='mutedStandard'
+          scrollEnabled={true}
+          zoomEnabled={true}
+          pitchEnabled={true}
+          rotateEnabled={true}
+          scrollDuringRotateOrZoomEnabled={true}
+          initialRegion={{
+            latitude:39.09,
+            longitude:-123.7,
+            latitudeDelta:0.092,
+            longitudeDelta:0.045 
+          }}
+
+          />
+          
+
+
       </View>
       <RideDetailsCard
   duration="1hr 22min"

@@ -31,7 +31,7 @@ export default function TabLayout() {
         options={{
           title: 'Welcome',
           tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
-          tabBarStyle: { display: 'none' },
+          // tabBarStyle: { display: 'none' },
         }}
       />
        <Tabs.Screen
