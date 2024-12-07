@@ -45,12 +45,51 @@ const ConfirmPickupScreen = () => {
         }}
       />
     </View>
-  
       </View>
       <Text style={styles.headerTitle}>Confirm Pickup Location</Text>
+      <View style={{
+  borderRadius: 20,
+  elevation: 5, // Android shadow
+  shadowColor: '#000', // iOS shadow
+  shadowOffset: { width: 0, height: 2 },
+  shadowOpacity: 0.25,
+  shadowRadius: 3.84,
+  marginVertical: 20,
+}}>
+  <MapView
+    style={{
+      width: '100%',
+      height: 300,
+    }}
+    initialRegion={region}
+  >
+    <Marker
+      coordinate={{
+        latitude: 30.7333 + (Math.random() - 0.5) * 0.05,
+        longitude: 76.7794 + (Math.random() - 0.5) * 0.05
+      }}
+    >
+      <Image
+        source={require('@/assets/images/marker.png')}
+        style={{ width: 40, height: 40 }}
+      />
+    </Marker>
+  </MapView>
+</View>
+<View style={{ 
+  flexDirection: 'row',
+  alignItems: 'center',
+  padding: 5}}>
+<Image
+        source={require('@/assets/images/marker.png')}
+        style={{ width: 40, height: 40 }}
+      />
+      <Text>In front of IBISS hotel </Text>
+</View>
       <TouchableOpacity style={styles.confirmButton}>
         <Text style={styles.confirmText}>Confirm Location</Text>
       </TouchableOpacity>
+      
 
     </View>
   );
