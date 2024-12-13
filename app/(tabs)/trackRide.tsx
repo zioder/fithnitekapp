@@ -7,7 +7,7 @@ import MapViewDirections from 'react-native-maps-directions';
 
 const origin = {latitude: 37.3318456, longitude: -122.0296002};
 const destination = {latitude: 37.771707, longitude: -122.4053769};
-const GOOGLE_MAPS_APIKEY = 'AIzaSyAeL0NOt9Z0u3wdU451MynINYppACDdcJY';
+const GOOGLE_MAPS_APIKEY = 'AIzaSyBHK03HC7DriumOwgoKl3ylkmYErRaKspk';
 
 
 export default function trackRide() {
