@@ -6,22 +6,48 @@ import {
   TouchableOpacity,
   StyleSheet,
   ScrollView,
+  Alert,
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useFonts } from 'expo-font';
+import {getAuth,signInWithEmailAndPassword,createUserWithEmailAndPassword} from 'firebase/auth';
+import app from '../firebaseConfig';
+import { doc, getDoc, getFirestore } from 'firebase/firestore';
 
 
 const LoginScreen = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  
+
   const router = useRouter();
   const [loaded] = useFonts({
     Poppins: require('../../assets/fonts/Poppins-Regular.ttf'),
   });
 
-  if(!loaded){
-    return null;  
+  async function loginEmailPassowrd(){
+    try {
+      setLoading(true)
+      const auth = getAuth(app)
+      const response = await signInWithEmailAndPassword(auth, email, password);
+      const db = getFirestore(app);
+      const userDoc = await getDoc(doc(db, "users", response.user.uid));
+      const userData = userDoc.data();
+      if (userData) {
+        Alert.alert("Success", `${userData.name} has been logged in successfully`);
+      } else {
+        Alert.alert("Error", "User data not found");
+      }
+      setLoading(false)
+    } catch (error) {
+      console.log(error)
+      setLoading(false)
+      Alert.alert("Error","error occured while logging in")
+   
   }
-  
+  }  
 
 
   return (
@@ -32,16 +58,17 @@ const LoginScreen = () => {
       </TouchableOpacity>
 
       {/* Title */}
-      <Text style={styles.title}>Sign in with your email or phone number</Text>
+      <Text style={styles.title}>Sign in with your email</Text>
 
       {/* Input Fields */}
-      <TextInput style={styles.input} placeholder="Name or Phone Number" />
+      <TextInput style={styles.input} placeholder="Email" keyboardType="email-address" onChangeText={setEmail} />
       
       <View style={styles.passwordContainer}>
         <TextInput
           style={[styles.passwordInput, { flex: 1 }]}
           placeholder="Enter Your Password"
           secureTextEntry={!showPassword}
+          onChangeText={setPassword}
         />
         <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
           <Text style={styles.togglePassword}>{showPassword ? "🙈" : "👁️"}</Text>
@@ -52,8 +79,8 @@ const LoginScreen = () => {
      
 
       {/* Sign Up Button */}
-      <TouchableOpacity style={styles.signUpButton} onPress={()=>{router.push('/rideonway')}} >
-        <Text style={styles.signUpText}>Log in</Text>
+      <TouchableOpacity style={styles.signUpButton} onPress={loginEmailPassowrd} >
+        <Text style={styles.signUpText}>Sign in</Text>
       </TouchableOpacity>
 
       {/* Social Signup Options */}

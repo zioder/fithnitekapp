@@ -6,18 +6,51 @@ import {
   TouchableOpacity,
   StyleSheet,
   ScrollView,
+  Alert,
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useFonts } from 'expo-font';
+import app from '../firebaseConfig';
+import {getAuth,signInWithEmailAndPassword,createUserWithEmailAndPassword} from 'firebase/auth';
+import { getFirestore, doc, setDoc } from 'firebase/firestore';
 
 
 const SignUpScreen = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [name, setName] = useState("");
+const [phoneNumber, setPhoneNumber] = useState("");
 
   const [loaded] = useFonts({
     SpaceMono: require('../../assets/fonts/SpaceMono-Regular.ttf'),
     Poppins: require("../../assets/fonts/Poppins-Regular.ttf")
   });
+
+async function registerEmailPassowrd(){
+  try {
+    setLoading(true)
+    const auth = getAuth(app)
+    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    
+    // Get reference to Firestore
+    const db = getFirestore(app);
+    await setDoc(doc(db, "users", userCredential.user.uid), {
+      name: name,
+      email: email,
+      phoneNumber: phoneNumber,
+      createdAt: new Date().toISOString()
+    });
+    const response = await signInWithEmailAndPassword(auth, email, password);
+    setLoading(false)
+    Alert.alert("Success", `${name} has been registered successfully`);
+  } catch (error) {
+    console.log(error)
+    setLoading(false)
+    Alert.alert("Error","error occured while registering")
+}
+}
 
   const router = useRouter()
 
@@ -32,14 +65,19 @@ const SignUpScreen = () => {
       <Text style={styles.title}>Sign up with your email or phone number</Text>
 
       {/* Input Fields */}
-      <TextInput style={styles.input} placeholder="Name" />
-      <TextInput style={styles.input} placeholder="Email" keyboardType="email-address" />
+      <TextInput 
+  style={styles.input} 
+  placeholder="Name" 
+  onChangeText={setName}
+/>
+      <TextInput style={styles.input} placeholder="Email" keyboardType="email-address" onChangeText={setEmail}/>
       <View style={styles.rowInput}>
         <Text style={styles.prefix}>+216</Text>
         <TextInput
           style={[styles.phoneNumberinput, { flex: 1, marginLeft: 0 }]}
           placeholder="Your mobile number"
           keyboardType="phone-pad"
+          onChangeText={setPhoneNumber}
         />
       </View>
        <View style={styles.passwordContainer}>
@@ -47,6 +85,7 @@ const SignUpScreen = () => {
           style={[styles.passwordInput, { flex: 1 }]}
           placeholder="Enter Your Password"
           secureTextEntry={!showPassword}
+          onChangeText={setPassword}
         />
         <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
           <Text style={styles.togglePassword}>{showPassword ? "🙈" : "👁️"}</Text>
@@ -61,7 +100,7 @@ const SignUpScreen = () => {
       </Text>
 
       {/* Sign Up Button */}
-      <TouchableOpacity style={styles.signUpButton}>
+      <TouchableOpacity style={styles.signUpButton} onPress={registerEmailPassowrd}>
         <Text style={styles.signUpText}>Sign Up</Text>
       </TouchableOpacity>
 
