@@ -4,6 +4,7 @@ import { StyleSheet, View, TouchableOpacity , Text} from 'react-native';
 import { useRouter } from 'expo-router';
 import RideDetailsCard from '@/components/ui/ride/RideDetailsCard';
 import MapViewDirections from 'react-native-maps-directions';
+import { ZoomIn } from 'react-native-reanimated';
 
 const origin = {latitude: 37.3318456, longitude: -122.0296002};
 const destination = {latitude: 37.771707, longitude: -122.4053769};
@@ -26,7 +27,13 @@ export default function trackRide() {
       </View>
     
       <View style={styles.mapWrapper}>
-          <MapView style={styles.map}>
+          <MapView initialRegion={{
+    latitude: 37.3318456,
+    longitude: -122.0296002,
+    latitudeDelta: 0.0922,
+    longitudeDelta: 0.0421,
+  }} style={styles.map}
+  >
           <MapViewDirections
               origin={origin}
               destination={destination}
