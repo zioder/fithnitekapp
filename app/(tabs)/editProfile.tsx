@@ -1,16 +1,69 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image } from 'react-native';
+import { router } from 'expo-router';
+import { getAuth, signOut, updateProfile } from 'firebase/auth';
+import { getFirestore, doc, getDoc, updateDoc } from 'firebase/firestore';
+import React, { useState, useEffect } from 'react';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, Alert } from 'react-native';
 
 const EditProfileScreen = () => {
-  const [LastSet, LastSetEdit] = useState('Jan. 2nd, 2024');
-  const [fullName, setFullName] = useState('Amira Balti');
-  const [email, setEmail] = useState('email@email.com');
-  const [phoneNumber, setPhoneNumber] = useState('+1234567890');
-  const [image, setImage] = useState('https://media.licdn.com/dms/image/v2/D5603AQHEKqeQIjzYkA/profile-displayphoto-shrink_200_200/profile-displayphoto-shrink_200_200/0/1703364653539?e=2147483647&v=beta&t=JfsOg2iiKOxWUyOSx3gRAcwhuLOQtdkhMkv0WiinTcY'); // Placeholder image URL
+  const [lastSet, setLastSet] = useState('');
+  const [fullName, setFullName] = useState('');
+  const [email, setEmail] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [image, setImage] = useState(''); // Placeholder image URL
 
-  const handleSave = () => {
-    // Handle save logic here
-    console.log('Profile saved!');
+  const auth = getAuth();
+  const db = getFirestore();
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const user = auth.currentUser;
+      if (user) {
+        const userDoc = await getDoc(doc(db, 'users', user.uid));
+        const userData = userDoc.data();
+        if (userData) {
+          setFullName(userData.fullName || '');
+          setEmail(userData.email || '');
+          setPhoneNumber(userData.phoneNumber || '');
+          setImage(userData.image || '');
+          setLastSet(userData.lastSet || '');
+        }
+      }
+    };
+
+    fetchUserData();
+  }, []);
+
+  const handleSave = async () => {
+    const user = auth.currentUser;
+    if (user) {
+      try {
+        await updateProfile(user, {
+          displayName: fullName,
+          photoURL: image,
+        });
+
+        await updateDoc(doc(db, 'users', user.uid), {
+          fullName,
+          email,
+          phoneNumber,
+          image,
+          lastSet: new Date().toLocaleDateString(),
+        });
+
+        Alert.alert('Success', 'Profile updated successfully!');
+      } catch (error) {
+        console.error('Error updating profile', error);
+        Alert.alert('Error', 'Failed to update profile');
+      }
+    }
+  };
+
+  const handleLogout = () => {
+    signOut(auth).then(() => {
+      router.replace('/(auth)');
+    }).catch((error) => {
+      console.error('Sign out error', error);
+    });
   };
 
   const handleChangePassword = () => {
@@ -24,15 +77,13 @@ const EditProfileScreen = () => {
         <TouchableOpacity style={styles.backButton}>
           <Text style={styles.backButtonText}>{"<"}</Text>
         </TouchableOpacity>
-        
       </View>
       <View style={styles.imgcont}>
-      <Text style={styles.title}>Edit Profile</Text>
-      <View style={styles.profilePictureContainer}>
-        <Image source={{ uri: image }} style={styles.profilePicture} />
-       
-      </View>
-      <TouchableOpacity style={styles.changePictureButton}>
+        <Text style={styles.title}>Edit Profile</Text>
+        <View style={styles.profilePictureContainer}>
+          <Image source={{ uri: image }} style={styles.profilePicture} />
+        </View>
+        <TouchableOpacity style={styles.changePictureButton}>
           <Text style={styles.changePictureText}>Change Picture</Text>
         </TouchableOpacity>
       </View>
@@ -42,14 +93,12 @@ const EditProfileScreen = () => {
         onChangeText={setFullName}
         placeholder="Full Name"
       />
-
       <TextInput
         style={styles.input}
         value={email}
         onChangeText={setEmail}
         placeholder="Email"
       />
-
       <TextInput
         style={styles.input}
         value={phoneNumber}
@@ -57,15 +106,15 @@ const EditProfileScreen = () => {
         placeholder="Phone Number"
         keyboardType="phone-pad"
       />
-
       <TouchableOpacity style={styles.changePasswordButton} onPress={handleChangePassword}>
         <Text style={styles.changePasswordText}>Change Password</Text>
       </TouchableOpacity>
-
-      <Text style={styles.passwordDateText}>Last set {LastSet}</Text>
-
+      <Text style={styles.passwordDateText}>Last set {lastSet}</Text>
       <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
         <Text style={styles.saveButtonText}>Save</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.saveButton} onPress={handleLogout}>
+        <Text style={styles.saveButtonText}>Logout</Text>
       </TouchableOpacity>
     </View>
   );
@@ -90,26 +139,25 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 24,
-   
     color: "#ec4d37",
   },
   imgcont: {
-    alignItems: "center", // Center the content inside the container
+    alignItems: "center",
   },
   profilePictureContainer: {
     alignItems: "center",
-    justifyContent: "center", // Ensure the image is centered inside the container
+    justifyContent: "center",
     marginVertical: 20,
-    backgroundColor: "black", // Black background
-    width: 148.889, // Container width
-    height: 148.889, // Container height to make it a circle
-    borderRadius: 148.889 / 2, // Make the container circular
+    backgroundColor: "black",
+    width: 148.889,
+    height: 148.889,
+    borderRadius: 148.889 / 2,
   },
   profilePicture: {
-    width: "100%", // The image will take the full width of the container
-    height: "100%", // The image will take the full height of the container
-    borderRadius: 148.889 / 2, // Make the image circular, matching the container's radius
-    resizeMode: "cover", // Ensure the image covers the entire space without distortion
+    width: "100%",
+    height: "100%",
+    borderRadius: 148.889 / 2,
+    resizeMode: "cover",
   },
   changePictureButton: {
     backgroundColor: '#f0f0f0',

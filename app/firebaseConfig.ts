@@ -1,7 +1,5 @@
 import { initializeApp } from 'firebase/app';
-
-
-
+import { getAuth } from 'firebase/auth';
 
 const firebaseConfig = {
     apiKey: "AIzaSyA3ZBjyCCTVScoXidLGdZ9o1r29gGRtV18",
@@ -10,8 +8,7 @@ const firebaseConfig = {
     storageBucket: "fithnitek-3df30.firebasestorage.app",
     messagingSenderId: "62186584531",
     appId: "1:62186584531:web:cffeb1ea46c0f57e635726"
-  };
-  
-  const app = initializeApp(firebaseConfig);
+};
 
-  export default app;
+export const app = initializeApp(firebaseConfig);
+export const auth = getAuth(app);

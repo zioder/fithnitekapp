@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import { router } from "expo-router";
 
 export default function FindRide() {
   const [from, setFrom] = useState("");
@@ -21,7 +22,7 @@ export default function FindRide() {
     <View style={styles.container}>
          <View style={styles.ss_container}>
       <Text style={styles.title}>Find a ride</Text>
-      <Text style={styles.label}>Where are you going ?</Text>
+      <Text style={styles.label}>Where are you going ?.</Text>
       <TextInput
         style={styles.input}
         placeholder="From"
@@ -62,7 +63,9 @@ export default function FindRide() {
       </View>
       <View style={styles.button}>
       <TouchableOpacity >
-    <Text style={styles.buttonText}>Find Ride</Text>
+    <TouchableOpacity onPress={() => router.push('/publisheddrives')}>
+      <Text style={styles.buttonText}>Find Ride</Text>
+    </TouchableOpacity>
   </TouchableOpacity>
   </View>
     </View>
