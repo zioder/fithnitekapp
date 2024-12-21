@@ -11,8 +11,9 @@ import {
 import { useRouter } from 'expo-router';
 import { useFonts } from 'expo-font';
 import {getAuth,signInWithEmailAndPassword,createUserWithEmailAndPassword} from 'firebase/auth';
-import app from '../firebaseConfig';
 import { doc, getDoc, getFirestore } from 'firebase/firestore';
+import { app } from '../firebaseConfig';
+import { Link, router } from 'expo-router';
 
 
 const LoginScreen = () => {
@@ -36,6 +37,7 @@ const LoginScreen = () => {
       const userDoc = await getDoc(doc(db, "users", response.user.uid));
       const userData = userDoc.data();
       if (userData) {
+        router.push('/trackRide'); // Route to the first tab screen// Routes to the tabbed navigation layout
         Alert.alert("Success", `${userData.name} has been logged in successfully`);
       } else {
         Alert.alert("Error", "User data not found");

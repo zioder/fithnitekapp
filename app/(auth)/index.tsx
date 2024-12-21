@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image, useColorScheme } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useFonts } from 'expo-font';
+import { getAuth, signOut } from 'firebase/auth';
 
 const WelcomeScreen = () => {
     const colorScheme = useColorScheme();
@@ -11,7 +12,10 @@ const WelcomeScreen = () => {
       Poppins: require("../../assets/fonts/Poppins-Regular.ttf")
     });
   
-
+    const handleLogout = () => {
+      const auth = getAuth();
+      signOut(auth);
+    };
 
     return (
       <View style={[styles.container, colorScheme === 'dark' ? styles.darkContainer : styles.lightContainer]}>
@@ -40,6 +44,7 @@ const WelcomeScreen = () => {
           <TouchableOpacity onPress={() => router.push('/login')}>
             <Text style={styles.logInText}>Log in</Text>
           </TouchableOpacity>
+
         </View>
       </View>
     );

@@ -1,7 +1,9 @@
-import React, { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from "react-native";
+import React, { useEffect, useState , } from "react";
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import { getAuth } from "firebase/auth";
+import { doc, getDoc, getFirestore, setDoc } from "firebase/firestore";
 
 export default function PublishRide() {
   const [from, setFrom] = useState("");
@@ -9,6 +11,25 @@ export default function PublishRide() {
   const [date, setDate] = useState(new Date());
   const [seats, setSeats] = useState(1);
   const [showPicker, setShowPicker] = useState(false);
+  const [userName, setUserName] = useState("");
+
+  const auth = getAuth();
+  const db = getFirestore();
+
+  useEffect(() => {
+    const fetchUserName = async () => {
+      const user = auth.currentUser;
+      if (user) {
+        const userDoc = await getDoc(doc(db, 'users', user.uid));
+        const userData = userDoc.data();
+        if (userData && userData.fullName) {
+          setUserName(userData.fullName);
+        }
+      }
+    };
+
+    fetchUserName();
+  }, []);
 
   const handleDateChange = (_: any, selectedDate?: Date | undefined) => {
     setShowPicker(false);
@@ -17,9 +38,34 @@ export default function PublishRide() {
     }
   };
 
+  const handlePublishRide = async () => {
+    if (!from || !to) {
+      Alert.alert('Error', 'Both origin and destination must be filled');
+      return;
+    }
+    const user = auth.currentUser;
+    if (user) {
+      try {
+        const rideData = {
+          from,
+          to,
+          date: date.toISOString(),
+          seats,
+          userName,
+          userId: user.uid,
+        };
+        await setDoc(doc(db, 'rides', `${user.uid}_${Date.now()}`), rideData);
+        Alert.alert('Success', 'Ride published successfully!');
+      } catch (error) {
+        console.error('Error publishing ride', error);
+        Alert.alert('Error', 'Failed to publish ride');
+      }
+    }
+  };
   return (
     <View style={styles.container}>
          <View style={styles.ss_container}>
+         <Text style={styles.greeting}>Hello, {userName}</Text>
       <Text style={styles.title}>Publish a ride</Text>
       <Text style={styles.label}>Origin :</Text>
       <TextInput
@@ -40,13 +86,13 @@ export default function PublishRide() {
         <Text>{date.toLocaleString()}</Text>
       </TouchableOpacity>
       {showPicker && (
-        <DateTimePicker
-          value={date}
-          mode="datetime"
-          display="default"
-          onChange={handleDateChange}
-        />
-      )}
+          <DateTimePicker
+            value={date}
+            mode="datetime"
+            display="default"
+            onChange={handleDateChange}
+          />
+        )}
 
         <Text style={styles.label}>Seats Available?</Text>
         <View style={styles.seatControls}>
@@ -63,7 +109,7 @@ export default function PublishRide() {
       </View>
       <View style={styles.button}>
       <TouchableOpacity >
-               <Text style={styles.buttonText}>Publish Ride</Text>
+               <Text style={styles.buttonText} onPress={handlePublishRide}>Publish Ride</Text>
       </TouchableOpacity>
   </View>
     </View>
@@ -73,6 +119,10 @@ export default function PublishRide() {
 }
 
 const styles = StyleSheet.create({
+  greeting: {
+    fontSize: 20,
+    marginBottom: 10,
+  },
     ss_container: {
         flex: 1,
         padding: 20,
