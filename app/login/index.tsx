@@ -11,7 +11,7 @@ import {
 import { useRouter } from 'expo-router';
 import { useFonts } from 'expo-font';
 import {getAuth,signInWithEmailAndPassword,createUserWithEmailAndPassword} from 'firebase/auth';
-import app from '../firebaseConfig';
+import {app} from '@/lib/firebaseConfig';
 import { doc, getDoc, getFirestore } from 'firebase/firestore';
 
 
@@ -37,9 +37,11 @@ const LoginScreen = () => {
       const userData = userDoc.data();
       if (userData) {
         Alert.alert("Success", `${userData.name} has been logged in successfully`);
+        router.replace("/profile")
+        console.log(userData)
       } else {
         Alert.alert("Error", "User data not found");
-      }
+      }   
       setLoading(false)
     } catch (error) {
       console.log(error)

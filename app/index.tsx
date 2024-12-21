@@ -7,8 +7,8 @@ const WelcomeScreen = () => {
     const colorScheme = useColorScheme();
     const router = useRouter();
     const [loaded] = useFonts({
-      SpaceMono: require('../../assets/fonts/SpaceMono-Regular.ttf'),
-      Poppins: require("../../assets/fonts/Poppins-Regular.ttf")
+      SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
+      Poppins: require("../assets/fonts/Poppins-Regular.ttf")
     });
   
 

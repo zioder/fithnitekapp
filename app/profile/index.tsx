@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image } from 'react-native';
+import { useRouter } from 'expo-router';
+import { useSession } from '@/context';
 
 const EditProfileScreen = () => {
   const [isEditing, setIsEditing] = useState(false);
@@ -8,6 +10,16 @@ const EditProfileScreen = () => {
   const [email, setEmail] = useState('email@email.com');
   const [phoneNumber, setPhoneNumber] = useState('+1234567890');
   const [image, setImage] = useState('https://media.licdn.com/dms/image/v2/D5603AQHEKqeQIjzYkA/profile-displayphoto-shrink_200_200/profile-displayphoto-shrink_200_200/0/1703364653539?e=2147483647&v=beta&t=JfsOg2iiKOxWUyOSx3gRAcwhuLOQtdkhMkv0WiinTcY');
+
+  const {user} = useSession()
+  const router = useRouter()
+
+  
+  useEffect(()=>{
+    console.log(user)
+
+    
+  }, [])
 
   const handleSave = () => {
     setIsEditing(false);
@@ -22,7 +34,7 @@ const EditProfileScreen = () => {
     <View style={styles.container}>
       <View style={styles.header}>
         <TouchableOpacity style={styles.backButton}>
-          <Text style={styles.backButtonText}>{"<"}</Text>
+          <Text onPress={()=>{router.replace("/")}} style={styles.backButtonText}>{"<"}</Text>
         </TouchableOpacity>
       </View>
 
