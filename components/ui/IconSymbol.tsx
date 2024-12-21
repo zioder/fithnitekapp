@@ -15,6 +15,8 @@ const MAPPING = {
   'plus.circle': 'add-circle-outline', // MaterialIcons or Ionicons
   'magnifyingglass.circle': 'search',
   'person': 'account-circle',
+  'message': 'chat',
+  'list': 'view-list',
 } as Partial<
   Record<
     import('expo-symbols').SymbolViewProps['name'],

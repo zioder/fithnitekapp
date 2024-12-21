@@ -5,7 +5,6 @@ import Icon from 'react-native-vector-icons/Ionicons'; // Importing icons from I
 import { useNavigation } from '@react-navigation/native';
 import { router } from 'expo-router';
 
-
 const profile = () => {
   return (
     <View style={styles.container}>

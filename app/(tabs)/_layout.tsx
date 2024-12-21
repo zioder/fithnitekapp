@@ -40,37 +40,42 @@ export default function TabLayout() {
         headerShown: false,
         tabBarButton: HapticTab,
         tabBarBackground: TabBarBackground,
-        tabBarStyle: Platform.select({
-          ios: {
-            position: 'absolute',
-          },
-          default: {},
-        }),
+        tabBarStyle: {
+          backgroundColor: Colors[colorScheme ?? 'light'].background,
+          borderTopColor: Colors[colorScheme ?? 'light'].border,
+        },
       }}
     >
       <Tabs.Screen
         name="trackRide"
         options={{
-          title: 'Track Ride',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
+          title: 'My Rides',
+          tabBarIcon: ({ color }) => <IconSymbol size={28} name="list" color={color} />,
         }}
       />
       <Tabs.Screen
         name="FindRide"
         options={{
-          title: 'Find a ride',
+          title: 'Search',
           tabBarIcon: ({ color }) => <IconSymbol size={28} name="magnifyingglass.circle" color={color} />,
         }}
       />
       <Tabs.Screen
         name="PublishAride"
         options={{
-          title: 'Publish a ride',
+          title: 'Publish',
           tabBarIcon: ({ color }) => <IconSymbol size={28} name="plus.circle" color={color} />,
         }}
       />
       <Tabs.Screen
-        name="Profile"
+        name="Inbox"
+        options={{
+          title: 'Inbox',
+          tabBarIcon: ({ color }) => <IconSymbol size={28} name="message" color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="profile"
         options={{
           title: 'Profile',
           tabBarIcon: ({ color }) => <IconSymbol size={28} name="person" color={color} />,

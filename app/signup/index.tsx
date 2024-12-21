@@ -44,6 +44,7 @@ async function registerEmailPassowrd(){
     });
     const response = await signInWithEmailAndPassword(auth, email, password);
     setLoading(false)
+    router.push('/trackRide'); // Route to the first tab screen// Routes to the tabbed navigation layout
     Alert.alert("Success", `${name} has been registered successfully`);
   } catch (error) {
     console.log(error)
