@@ -4,13 +4,17 @@ import { Ionicons } from "@expo/vector-icons";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { getAuth } from "firebase/auth";
 import { doc, getDoc, getFirestore, setDoc } from "firebase/firestore";
+import { DateTimePickerEvent } from "@react-native-community/datetimepicker";
 
 export default function PublishRide() {
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
   const [date, setDate] = useState(new Date());
+
   const [seats, setSeats] = useState(1);
-  const [showPicker, setShowPicker] = useState(false);
+  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [showTimePicker, setShowTimePicker] = useState(false);
+
   const [userName, setUserName] = useState("");
 
   const auth = getAuth();
@@ -31,10 +35,28 @@ export default function PublishRide() {
     fetchUserName();
   }, []);
 
-  const handleDateChange = (_: any, selectedDate?: Date | undefined) => {
-    setShowPicker(false);
-    if (selectedDate) {
-      setDate(selectedDate);
+  const handleDateChange = (event: DateTimePickerEvent, date?: Date | undefined)=> {
+    console.log(date?.toISOString())
+    setShowDatePicker(false);
+
+    if (date) {
+      setDate(date);
+
+    }
+    if (event.type == 'dismissed'){
+      setShowDatePicker(false);
+    }
+  };
+  const handleTimeChange = (event: DateTimePickerEvent, date?: Date | undefined)=> {
+    console.log(date)
+    setShowTimePicker(false);
+
+    if (date) {
+      setDate(date);
+
+    }
+    if (event.type == 'dismissed'){
+      setShowTimePicker(false);
     }
   };
 
@@ -54,6 +76,7 @@ export default function PublishRide() {
           userName,
           userId: user.uid,
         };
+        console.log(rideData)
         await setDoc(doc(db, 'rides', `${user.uid}_${Date.now()}`), rideData);
         Alert.alert('Success', 'Ride published successfully!');
       } catch (error) {
@@ -81,16 +104,31 @@ export default function PublishRide() {
         value={to}
         onChangeText={setTo}
       />
-     <Text style={styles.label}>Date and Time :</Text>
-      <TouchableOpacity style={styles.input} onPress={() => setShowPicker(true)}>
-        <Text>{date.toLocaleString()}</Text>
+     <Text style={styles.label}>Date :</Text>
+      <TouchableOpacity style={styles.input} onPress={() => setShowDatePicker(true)}>
+        <Text>{date.toLocaleDateString("en-US")}</Text>
       </TouchableOpacity>
-      {showPicker && (
+      {showDatePicker && (
           <DateTimePicker
             value={date}
-            mode="datetime"
+            mode="date"
             display="default"
             onChange={handleDateChange}
+          />
+        )}
+        <Text style={styles.label}>Time :</Text>
+      <TouchableOpacity style={styles.input} onPress={() => setShowTimePicker(true)}>
+        <Text>{date.toLocaleTimeString("en-US", {
+  hour: "2-digit",
+  minute: "2-digit"
+})}</Text>
+      </TouchableOpacity>
+      {showTimePicker && (
+          <DateTimePicker
+            value={date}
+            mode="time"
+            display="default"
+            onChange={handleTimeChange}
           />
         )}
 
