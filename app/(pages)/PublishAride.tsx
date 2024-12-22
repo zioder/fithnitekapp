@@ -93,6 +93,21 @@ export default function PublishRide() {
         }
     }
 };
+  async function deleteRide(): Promise<void> {
+    if (!isEditing) return;
+    const user = auth.currentUser;
+    if (!user) return;
+
+    try {
+      await setDoc(doc(db, 'rides', rideId), {}, { merge: true });
+      Alert.alert('Success', 'Ride deleted successfully!');
+      router.back();
+    } catch (error) {
+      console.error('Error deleting ride', error);
+      Alert.alert('Error', 'Failed to delete ride');
+    }
+  }
+
   return (
     <View style={styles.container}>
       <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 20 }}>
@@ -174,6 +189,9 @@ export default function PublishRide() {
       <TouchableOpacity >
                <Text style={styles.buttonText} onPress={handlePublishRide}>{isEditing ? 'Update Ride' : 'Publish Ride'}</Text>
       </TouchableOpacity>
+      {isEditing?<TouchableOpacity >
+               <Text style={styles.buttonText} onPress={deleteRide}>Delete Ride</Text>
+      </TouchableOpacity> : <></>}
   </View>
     </View>
 
