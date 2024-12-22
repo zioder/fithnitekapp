@@ -4,7 +4,16 @@ import Icon from 'react-native-vector-icons/Ionicons'; // Importing icons from I
 
 import { useNavigation } from '@react-navigation/native';
 import { router } from 'expo-router';
+import { signOut } from 'firebase/auth';
+import { auth } from './firebaseConfig';
 
+const handleLogout = () => {
+    signOut(auth).then(() => {
+      router.replace('/(auth)');
+    }).catch((error) => {
+      console.error('Sign out error', error);
+    });
+  };
 const profile = () => {
   return (
     <View style={styles.container}>

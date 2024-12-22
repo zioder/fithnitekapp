@@ -1,27 +1,44 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons'; // Importing icons from Ionicons set
 
 import { useNavigation } from '@react-navigation/native';
 import { router } from 'expo-router';
+import { onAuthStateChanged, signOut } from 'firebase/auth';
+import { auth } from '../firebaseConfig';
+
+const handleLogout = () => {
+  signOut(auth).then(() => {
+    router.replace('/(auth)');
+  }).catch((error) => {
+    console.error('Sign out error', error);
+  });
+};
+
 
 
 const profile = () => {
+  const [fullName, setFullName] = useState('Abdessayed Ala');
+  const [image, setImage] = useState(''); 
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        // Assuming the user's display name is stored in the auth object
+        setFullName(user.displayName || 'Abdessayed Ala');
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
   return (
     <View style={styles.container}>
-      {/* Back Arrow */}
-      <View style={styles.container}>
-      <TouchableOpacity
-        style={styles.backButton}
-        >
-        <Text style={styles.backButtonText}>&lt;</Text>
-      </TouchableOpacity>
-      {/* Add other UI components here */}
-    </View> 
+    <View style={styles.profilePictureContainer}>
+      <Image source={{ uri: image }} style={styles.profilePicture} />
+    </View>
 
       {/* Profile Info */}
       <View style={styles.profileContainer}>
-        <Text style={styles.name}>Abdessayed Ala</Text>
+        <Text style={styles.name}>{fullName}</Text>
         <Text style={styles.location}>📍 Sousse, Tunisie</Text>
       </View>
 
@@ -40,10 +57,14 @@ const profile = () => {
       {/* Buttons */}
       <View style={styles.buttonsContainer}>
         <TouchableOpacity style={styles.messageButton}>
+        <TouchableOpacity
+          onPress={() => router.push('/editProfile')}
+        >
           <Text style={styles.buttonText}>Edit Profile</Text>
         </TouchableOpacity>
+        </TouchableOpacity>
         <TouchableOpacity style={styles.viewDetailsButton}>
-          <Text style={styles.buttonText}>Logout</Text>
+          <Text style={styles.buttonText} onPress={handleLogout}>Logout</Text>
         </TouchableOpacity>
       </View>
 
@@ -86,6 +107,10 @@ const profile = () => {
 };
 
 const styles = StyleSheet.create({
+  title: {
+    fontSize: 24,
+    color: "#ec4d37",
+  },
   container: {
     flex: 1,
     backgroundColor: 'white',
@@ -97,6 +122,15 @@ const styles = StyleSheet.create({
   backButtonText: {
     fontSize: 20,
     color: 'red',
+  },
+  profilePictureContainer: {
+    alignItems: "center",
+    justifyContent: "center",
+    marginVertical: 20,
+    backgroundColor: "black",
+    width: 148.889,
+    height: 148.889,
+    borderRadius: 148.889 / 2,
   },
   profileContainer: {
     alignItems: 'center',
@@ -193,6 +227,12 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: 'gray',
     marginTop: 4,
+  },
+  profilePicture: {
+    width: "100%",
+    height: "100%",
+    borderRadius: 148.889 / 2,
+    resizeMode: "cover",
   },
 });
 
