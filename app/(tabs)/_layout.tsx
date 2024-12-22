@@ -8,7 +8,6 @@ import { Colors } from '@/constants/Colors';
 import { useColorScheme } from 'react-native';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { useState, useEffect } from 'react';
-import { Redirect } from 'expo-router';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();

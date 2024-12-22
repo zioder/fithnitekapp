@@ -63,6 +63,7 @@ export default function PublishRide() {
       setShowTimePicker(false);
     }
   };
+
   const handlePublishRide = async () => {
     if (!from || !to) {
         Alert.alert('Error', 'Both origin and destination must be filled');
@@ -92,7 +93,6 @@ export default function PublishRide() {
         }
     }
 };
-
   return (
     <View style={styles.container}>
          <View style={styles.ss_container}>
@@ -164,7 +164,7 @@ export default function PublishRide() {
       </View>
       <View style={styles.button}>
       <TouchableOpacity >
-      {isEditing ? 'Update Ride' : 'Publish Ride'}
+               <Text style={styles.buttonText} onPress={handlePublishRide}>{isEditing ? 'Update Ride' : 'Publish Ride'}</Text>
       </TouchableOpacity>
   </View>
     </View>
