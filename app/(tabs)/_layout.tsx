@@ -49,7 +49,7 @@ export default function TabLayout() {
       }}
     >
       <Tabs.Screen
-        name="trackRide"
+        name="myRides"
         options={{
           title: 'My Rides',
           tabBarIcon: ({ color }) => <IconSymbol size={28} name="list" color={color} />,

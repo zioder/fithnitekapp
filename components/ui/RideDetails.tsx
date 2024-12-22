@@ -1,31 +1,40 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 
 type RideDetailsProps = {
     name: string;
-    price: string;
     dateTime: string;
     from: string;
     to: string;
     description: string;
-    style?: object; // Allow additional style props
+    style?: object; 
+    personal : boolean;
+    seats : number;
+    onEdit?: () => void;
 };
 
-function RideDetails({ name, price, dateTime, from, to, description, style }: RideDetailsProps) {
+function RideDetails({ name, dateTime, from, to, description, style , personal,seats,onEdit }: RideDetailsProps) {
     return (
         <View style={[styles.card, style]}>
-            <View style={styles.row}>
+            {!personal && <View style={styles.row}>
                 <Image source={require('@/assets/images/avatar.png')} style={styles.avatar} />
                 <View>
                     <Text style={styles.name}>{name}</Text>
-                    <Text style={styles.price}>{price} DNT</Text>
                 </View>
-            </View>
+            </View>}
             <View style={styles.details}>
                 <Text style={styles.detailText}>Date & time: <Text style={styles.value}>{dateTime}</Text></Text>
                 <Text style={styles.detailText}>From To: <Text style={styles.value}>{from} &gt; {to}</Text></Text>
                 <Text style={styles.detailText}>Description: <Text style={styles.value}>{description}</Text></Text>
+                <Text style={styles.detailText}>Seats available <Text style={styles.value}>{seats}</Text></Text>
             </View>
+            <TouchableOpacity 
+                style={styles.editButton}
+                onPress={() => {onEdit}}>
+                <Text style={styles.editButtonText}>Edit Ride</Text>
+            </TouchableOpacity>
+
+            
         </View>
     );
 }
@@ -75,6 +84,18 @@ const styles = StyleSheet.create({
     value: {
         color: '#333',
         fontWeight: '600',
+    },
+    // Add to StyleSheet:
+    editButton: {
+        backgroundColor: '#FF6B6B',
+        padding: 10,
+        borderRadius: 5,
+        marginTop: 10,
+        alignItems: 'center',
+    },
+    editButtonText: {
+        color: 'white',
+        fontWeight: 'bold',
     },
 });
 

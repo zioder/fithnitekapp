@@ -38,7 +38,7 @@ const LoginScreen = () => {
       const userData = userDoc.data();
       if (userData) {
         router.dismissAll();
-        router.replace('/trackRide'); 
+        router.replace('/myRides'); 
       } else {
         Alert.alert("Error", "User data not found");
       }

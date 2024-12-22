@@ -45,7 +45,7 @@ async function registerEmailPassowrd(){
     const response = await signInWithEmailAndPassword(auth, email, password);
     setLoading(false)
     router.dismissAll();
-    router.replace('/trackRide');
+    router.replace('/myRides');
     Alert.alert("Success", `${name} has been registered successfully`);
   } catch (error) {
     console.log(error)

@@ -1,168 +1,112 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, TouchableHighlight } from 'react-native';
-import MapView, { Marker } from 'react-native-maps';
-import { Image } from 'react-native';
+import React from 'react';
+import MapView from 'react-native-maps';
+import { StyleSheet, View, TouchableOpacity , Text} from 'react-native';
 import { useRouter } from 'expo-router';
+import RideDetailsCard from '@/components/ui/ride/RideDetailsCard';
+import MapViewDirections from 'react-native-maps-directions';
+
+const origin = {latitude: 37.3318456, longitude: -122.0296002};
+const destination = {latitude: 37.771707, longitude: -122.4053769};
+const GOOGLE_MAPS_APIKEY = 'AIzaSyAeL0NOt9Z0u3wdU451MynINYppACDdcJY';
 
 
-const ConfirmPickupScreen = () => {
+export default function trackRide() {
+
   const router = useRouter();
-  const [region, setRegion] = useState({
-    latitude: 30.7333,
-    longitude: 76.7794,
-    latitudeDelta: 0.0922,
-    longitudeDelta: 0.0421,
-  });
-
-  useEffect(() => {
-    // Fetch actual pickup location and route data
-    // Update the region and marker accordingly
-  }, []);
 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-      <TouchableOpacity 
-      style={styles.backButton} 
-      onPress={() => {router.push('/')}}>
-      <Image 
-        source={require("@/assets/images/backbtn.png")}
-        style={{ width: 40, height: 40 }}
-      />
-    </TouchableOpacity>
-    <View style={{ 
-      flex: 1, 
-      alignItems: 'center',
-      justifyContent: 'center', // Add this to center horizontally
-      marginLeft: -30, // Offset the backButton width to achieve true center
-    }}>
-      <Image 
-        source={require("@/assets/images/logo.png")}
-        style={{
-          width: 200,
-          height: 200,
-          resizeMode: 'contain'
-        }}
-      />
-    </View>
-      </View>
-      <Text style={styles.headerTitle}>Confirm Pickup Location</Text>
-      <View style={{
-  borderRadius: 20,
-  elevation: 5, // Android shadow
-  shadowColor: '#000', // iOS shadow
-  shadowOffset: { width: 0, height: 2 },
-  shadowOpacity: 0.25,
-  shadowRadius: 3.84,
-  marginVertical: 20,
-}}>
-  <MapView
-    style={{
-      width: '100%',
-      height: 300,
-    }}
-    initialRegion={region}
-  >
-    <Marker
-      coordinate={{
-        latitude: 30.7333 + (Math.random() - 0.5) * 0.05,
-        longitude: 76.7794 + (Math.random() - 0.5) * 0.05
-      }}
-    >
-      <Image
-        source={require('@/assets/images/marker.png')}
-        style={{ width: 40, height: 40 }}
-      />
-    </Marker>
-  </MapView>
-</View>
-<View style={{ 
-  flexDirection: 'row',
-  justifyContent: 'space-evenly',
-  alignItems: 'center',
-  padding: 5,
-  width :"100%"}}>
-<Image
-        source={require('@/assets/images/marker.png')}
-        style={{ width: 40, height: 40 }}
-      />
-      <Text style={styles.locationText}>In front of IBISS hotel </Text>
-</View>
-      <TouchableOpacity style={styles.confirmButton}>
-        <Text style={styles.confirmText}>Confirm Location</Text>
+      <TouchableOpacity style={styles.backButton}  >
+        <Text style={styles.backText}> {"<"} Back</Text>
       </TouchableOpacity>
-      
+      <Text style={styles.headerText}>
+         Your ride is on the way!
+      </Text>
+      </View>
+    
+      <View style={styles.mapWrapper}>
+          <MapView style={styles.map}>
+          <MapViewDirections
+              origin={origin}
+              destination={destination}
+              apikey={GOOGLE_MAPS_APIKEY}
+  />
 
+          </MapView>
+      </View>
+      <RideDetailsCard
+  duration="1hr 22min"
+  eta="E.T.A"
+  carModel="KIA Rio"
+  referenceNumber="197 تونس 2352"
+  driverName="John Doe"
+  rating={4.8}
+  trips={50}
+  onCall={() => console.log('Calling...')}
+  onMessage={() => console.log('Messaging...')}
+  onCancel={() => console.log('Cancelling ride...')}
+/>
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#fff',
+    flex: 1,
+    justifyContent: "flex-start",
+    flexDirection:"column",
+    alignItems:"center",
+    backgroundColor: "#fff",
     padding: 20,
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 10,
-    backgroundColor: '#fff',
-  },
-  backButton: {
-    marginRight: 10,
-  },
-  headerTitle: {
-    paddingHorizontal: 30,
-
-    fontSize: 25,
-    fontWeight: '200',
+    marginTop: 30 , 
+    fontFamily:"Poppins",
+    width:"100%",
+    
+    
   },
   map: {
-    flex: 1,
+    width: '100%',
+    height: '100%',
+
   },
-  pickupLocation: {
-    padding: 16,
-    backgroundColor: '#fff',
-  },
-  pickupText: {
+  backText: {
     fontSize: 16,
-    marginBottom: 10,
-  },
-  confirmButton: {
-    backgroundColor: "#FF5630",
-    paddingVertical: 15,
-    borderRadius: 30,
+    color: "#000",
     marginBottom: 20,
-    alignItems: "center",
-    fontFamily:"Poppins"
+    fontFamily:"Poppins",
 
   },
-  confirmText: {
-    color: "#fff",
-    fontSize: 16,
-    fontWeight: "600",
-    fontFamily:"Poppins"
+  header :{
+    display:"flex",
+    justifyContent:"center",
+    flexDirection:"column",
+    alignItems:"center",
+    marginBottom: 20, 
+    width:"100%" 
 
   },
-  bottomNavBar: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: 'center',
-    padding: 10,
-    backgroundColor: '#fff',
+  headerText:{
+    fontFamily:"Poppins",
+    color:'red',
+    fontSize:20
+
+
   },
-  navButton: {
-    alignItems: 'center',
+  backButton:{
+    width:"20%",
+    alignSelf:"flex-start"
   },
-  navText: {
-    fontSize: 12,
-    marginTop: 5,
-  },
-  locationText: {
-    fontSize: 20,
-    color: "#FF5630",
-    fontWeight : "bold"
+
+  mapWrapper:{
+    width:"100%",
+    height:"50%",
+    borderRadius:10,
+    overflow:"hidden",
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
   }
 });
-
-export default ConfirmPickupScreen;

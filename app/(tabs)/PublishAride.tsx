@@ -5,8 +5,12 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import { getAuth } from "firebase/auth";
 import { doc, getDoc, getFirestore, setDoc } from "firebase/firestore";
 import { DateTimePickerEvent } from "@react-native-community/datetimepicker";
-
+import { router, useLocalSearchParams } from 'expo-router';
 export default function PublishRide() {
+  const params = useLocalSearchParams();
+  const isEditing = params.isEditing === 'true';
+  const rideId = params.rideId as string;
+
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
   const [date, setDate] = useState(new Date());
@@ -14,7 +18,7 @@ export default function PublishRide() {
   const [seats, setSeats] = useState(1);
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [showTimePicker, setShowTimePicker] = useState(false);
-
+  const [description,setDescription] = useState("");
   const [userName, setUserName] = useState("");
 
   const auth = getAuth();
@@ -59,32 +63,36 @@ export default function PublishRide() {
       setShowTimePicker(false);
     }
   };
-
   const handlePublishRide = async () => {
     if (!from || !to) {
-      Alert.alert('Error', 'Both origin and destination must be filled');
-      return;
+        Alert.alert('Error', 'Both origin and destination must be filled');
+        return;
     }
     const user = auth.currentUser;
     if (user) {
-      try {
-        const rideData = {
-          from,
-          to,
-          date: date.toISOString(),
-          seats,
-          userName,
-          userId: user.uid,
-        };
-        console.log(rideData)
-        await setDoc(doc(db, 'rides', `${user.uid}_${Date.now()}`), rideData);
-        Alert.alert('Success', 'Ride published successfully!');
-      } catch (error) {
-        console.error('Error publishing ride', error);
-        Alert.alert('Error', 'Failed to publish ride');
-      }
+        try {
+            const rideData = {
+                ride_id: isEditing ? rideId : `${user.uid}_${Date.now()}`,
+                driver_id: user.uid,
+                origin: from,
+                destination: to,
+                radius_tolerance: 5.0,
+                seats_available: seats,
+                date_time: date.toISOString(),
+                created_at: isEditing ? new Date().toISOString() : new Date().toISOString(),
+                description: description,
+            };
+
+            await setDoc(doc(db, 'rides', rideData.ride_id), rideData);
+            Alert.alert('Success', `Ride ${isEditing ? 'updated' : 'published'} successfully!`);
+            router.back();
+        } catch (error) {
+            console.error('Error publishing ride', error);
+            Alert.alert('Error', `Failed to ${isEditing ? 'update' : 'publish'} ride`);
+        }
     }
-  };
+};
+
   return (
     <View style={styles.container}>
          <View style={styles.ss_container}>
@@ -131,6 +139,13 @@ export default function PublishRide() {
             onChange={handleTimeChange}
           />
         )}
+        <Text style={styles.label}>Description :</Text>
+      <TextInput
+        style={styles.input}
+        placeholder="Ex : Light luggage , pets included.."
+        value={description}
+        onChangeText={setDescription}
+      />
 
         <Text style={styles.label}>Seats Available?</Text>
         <View style={styles.seatControls}>
@@ -143,11 +158,13 @@ export default function PublishRide() {
           <TouchableOpacity onPress={() => setSeats(seats + 1)}>
             <Ionicons name="add-circle-outline" size={24} color="black" />
           </TouchableOpacity>
+          
         </View>
+        
       </View>
       <View style={styles.button}>
       <TouchableOpacity >
-               <Text style={styles.buttonText} onPress={handlePublishRide}>Publish Ride</Text>
+      {isEditing ? 'Update Ride' : 'Publish Ride'}
       </TouchableOpacity>
   </View>
     </View>

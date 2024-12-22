@@ -57,15 +57,6 @@ const EditProfileScreen = () => {
       }
     }
   };
-
-  const handleLogout = () => {
-    signOut(auth).then(() => {
-      router.replace('/(auth)');
-    }).catch((error) => {
-      console.error('Sign out error', error);
-    });
-  };
-
   const handleChangePassword = () => {
     // Handle change password logic here
     console.log('Password changed!');
@@ -74,7 +65,9 @@ const EditProfileScreen = () => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity style={styles.backButton}>
+        <TouchableOpacity style={styles.backButton} onPress={()=>{
+          
+          router.back()}}>
           <Text style={styles.backButtonText}>{"<"}</Text>
         </TouchableOpacity>
       </View>
@@ -112,9 +105,6 @@ const EditProfileScreen = () => {
       <Text style={styles.passwordDateText}>Last set {lastSet}</Text>
       <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
         <Text style={styles.saveButtonText}>Save</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.saveButton} onPress={handleLogout}>
-        <Text style={styles.saveButtonText}>Logout</Text>
       </TouchableOpacity>
     </View>
   );
