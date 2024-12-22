@@ -13,15 +13,15 @@ const PublishedRides = () => {
     const handleEditRide = (ride: { [x: string]: any; id: any; origin?: any; destination?: any; date_time?: any; description?: any; seats_available?: any; }) => {
         console.log('Editing ride:', ride);
         router.push({
-            pathname: '/PublishAride',
+            pathname: '/(pages)/PublishAride',
             params: {
-                isEditing: 'true',
-                rideId: ride.id,
-                origin: ride.origin,
-                destination: ride.destination,
-                dateTime: ride.date_time,
-                description: ride.description || "",
-                seats: ride.seats_available
+            isEditing: 'true',
+            rideId: ride.id,
+            origin: ride.origin,
+            destination: ride.destination,
+            dateTime: ride.date_time,
+            description: ride.description || "",
+            seats: ride.seats_available
             }
         });
     };

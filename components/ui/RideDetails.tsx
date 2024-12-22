@@ -30,7 +30,7 @@ function RideDetails({ name, dateTime, from, to, description, style , personal,s
             </View>
             <TouchableOpacity 
                 style={styles.editButton}
-                onPress={() => {onEdit}}>
+                onPress={onEdit}>
                 <Text style={styles.editButtonText}>Edit Ride</Text>
             </TouchableOpacity>
 

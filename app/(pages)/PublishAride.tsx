@@ -95,9 +95,17 @@ export default function PublishRide() {
 };
   return (
     <View style={styles.container}>
+      <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 20 }}>
+        <TouchableOpacity 
+          onPress={() => router.back()}
+          style={{ marginRight: 15 }}
+        >
+          <Ionicons name="arrow-back" size={24} color="black" />
+        </TouchableOpacity>
+        <Text style={styles.title}>{isEditing ? 'Update Ride' : 'Publish Ride'}</Text>
+      </View>
          <View style={styles.ss_container}>
-         <Text style={styles.greeting}>Hello, {userName}</Text>
-      <Text style={styles.title}>{isEditing ? 'Update Ride' : 'Publish Ride'}</Text>
+      
       <Text style={styles.label}>Origin :</Text>
       <TextInput
         style={styles.input}
