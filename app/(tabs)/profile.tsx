@@ -13,7 +13,6 @@ const profile = () => {
       <View style={styles.container}>
       <TouchableOpacity
         style={styles.backButton}
-        onPress={() => router.push('/')}  // Updated path
         >
         <Text style={styles.backButtonText}>&lt;</Text>
       </TouchableOpacity>
@@ -41,16 +40,16 @@ const profile = () => {
       {/* Buttons */}
       <View style={styles.buttonsContainer}>
         <TouchableOpacity style={styles.messageButton}>
-          <Text style={styles.buttonText}>Message</Text>
+          <Text style={styles.buttonText}>Edit Profile</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.viewDetailsButton}>
-          <Text style={styles.buttonText}>View Details</Text>
+          <Text style={styles.buttonText}>Logout</Text>
         </TouchableOpacity>
       </View>
 
       {/* Latest Trips */}
       <View style={styles.latestTripsContainer}>
-        <Text style={styles.latestTripsTitle}>Latest trips</Text>
+        <Text style={styles.latestTripsTitle}>My Latest trips</Text>
         <View style={styles.trip}>
           <Text style={styles.tripText}>
             <Text style={styles.bold}>Date & time:</Text> 25/12 at 4 AM

@@ -37,8 +37,8 @@ const LoginScreen = () => {
       const userDoc = await getDoc(doc(db, "users", response.user.uid));
       const userData = userDoc.data();
       if (userData) {
-        router.push('/trackRide'); // Route to the first tab screen// Routes to the tabbed navigation layout
-        Alert.alert("Success", `${userData.name} has been logged in successfully`);
+        router.dismissAll();
+        router.replace('/trackRide'); 
       } else {
         Alert.alert("Error", "User data not found");
       }

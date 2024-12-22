@@ -6,6 +6,7 @@ import {
     TouchableOpacity,
     FlatList,
     StyleSheet,
+    SafeAreaView,
 } from 'react-native';
 
 export default function Inbox() {
@@ -39,37 +40,24 @@ export default function Inbox() {
                 <Text style={styles.messageTime}>{item.time}</Text>
             </View>
 
-            {/* Right Arrow */}
-            <TouchableOpacity>
-                <Image
-                    source={require('@/assets/images/fleche.png')} // Replace with your right arrow image
-                    style={styles.rightArrow}
-                />
-            </TouchableOpacity>
         </View>
     );
 
     return (
-        <View style={styles.container}>
-            {/* Header */}
-            <View style={styles.header}>
-                <TouchableOpacity>
-                    <Image
-                        source={require('@/assets/images/backbtn.png')} // Replace with your back button image
-                        style={styles.backButton}
-                    />
-                </TouchableOpacity>
-                <Text style={styles.headerTitle}>Inbox</Text>
-            </View>
+        <SafeAreaView style={styles.container}>
+        {/* Header */}
+        <View style={[styles.header, { marginVertical: 20 }]}>
+    <Text style={styles.headerTitle}>Inbox</Text>
+</View>
 
-            {/* Inbox List */}
-            <FlatList
-                data={messages}
-                renderItem={renderMessage}
-                keyExtractor={(item) => item.id}
-                contentContainerStyle={styles.inboxList}
-            />
-        </View>
+        {/* Inbox List */}
+        <FlatList
+            data={messages}
+            renderItem={renderMessage}
+            keyExtractor={(item) => item.id}
+            contentContainerStyle={styles.inboxList}
+        />
+    </SafeAreaView>
     );
 }
 
