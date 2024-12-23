@@ -1,9 +1,9 @@
 import React, { useEffect, useState , } from "react";
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert,ScrollView } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { getAuth } from "firebase/auth";
-import { doc, getDoc, getFirestore, setDoc } from "firebase/firestore";
+import { doc, getDoc, getFirestore, setDoc, deleteDoc } from "firebase/firestore";
 import { DateTimePickerEvent } from "@react-native-community/datetimepicker";
 import { router, useLocalSearchParams } from 'expo-router';
 export default function PublishRide() {
@@ -86,7 +86,7 @@ export default function PublishRide() {
 
             await setDoc(doc(db, 'rides', rideData.ride_id), rideData);
             Alert.alert('Success', `Ride ${isEditing ? 'updated' : 'published'} successfully!`);
-            router.back();
+            router.replace("/(tabs)/myRides");
         } catch (error) {
             console.error('Error publishing ride', error);
             Alert.alert('Error', `Failed to ${isEditing ? 'update' : 'publish'} ride`);
@@ -99,7 +99,7 @@ export default function PublishRide() {
     if (!user) return;
 
     try {
-      await setDoc(doc(db, 'rides', rideId), {}, { merge: true });
+      await deleteDoc(doc(db, 'rides', rideId));
       Alert.alert('Success', 'Ride deleted successfully!');
       router.back();
     } catch (error) {
@@ -109,6 +109,7 @@ export default function PublishRide() {
   }
 
   return (
+    <ScrollView>
     <View style={styles.container}>
       <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 20 }}>
         <TouchableOpacity 
@@ -189,11 +190,17 @@ export default function PublishRide() {
       <TouchableOpacity >
                <Text style={styles.buttonText} onPress={handlePublishRide}>{isEditing ? 'Update Ride' : 'Publish Ride'}</Text>
       </TouchableOpacity>
-      {isEditing?<TouchableOpacity >
+      </View>
+
+      {isEditing?
+            <View style={styles.button}>
+      <TouchableOpacity >
                <Text style={styles.buttonText} onPress={deleteRide}>Delete Ride</Text>
-      </TouchableOpacity> : <></>}
+      </TouchableOpacity>
+      </View>
+ : <></>}
   </View>
-    </View>
+  </ScrollView>
 
     
   );
@@ -220,6 +227,7 @@ const styles = StyleSheet.create({
     justifyContent:"space-around", // Center vertically
     alignItems: "stretch", // Stretch components horizontally
     backgroundColor: "#fff",
+    paddingTop:40
   },
   title: {
     fontSize: 34,
@@ -260,7 +268,7 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     borderRadius: 24,
     alignItems: "center",
-    marginTop: 50, // Space above the button
+    marginTop: 20, // Space above the button
   },
   buttonText: {
     color: "#fff",

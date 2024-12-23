@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { SafeAreaView, ScrollView, StyleSheet, Image, View, Text } from 'react-native';
 import RideDetails from '@/components/ui/RideDetails'; // Correct path with forward slashes
 import { Button } from 'react-native';
-import { collection, getDocs, getFirestore, query, where } from 'firebase/firestore';
+import { collection, getDocs, getFirestore, query, where , onSnapshot} from 'firebase/firestore';
 import { auth } from '../firebaseConfig';
 import { useRouter } from 'expo-router';
 
@@ -29,38 +29,62 @@ const PublishedRides = () => {
     const [rides, setRides] = useState<{ id: string; [key: string]: any }[]>([]);
     const [mode, setMode] = useState('Driver');
     const db = getFirestore();
+    let unsubscribe = null; // Listener cleanup
 
-    useEffect(() => {
-        const fetchRides = async () => {
-            const user = auth.currentUser;
-            if (!user) return;
+    const fetchRides = async () => {
+        const user = auth.currentUser;
+        if (!user) return;
 
-            try {
-                if (mode === 'Driver') {
-                    // Fetch rides where the current user is the driver
-                    const ridesQuery = query(
-                        collection(db, 'rides'),
-                        where('driver_id', '==', user.uid)
-                    );
-                    
-                    const querySnapshot = await getDocs(ridesQuery);
+        // Clear any existing snapshot listeners
+        if (unsubscribe) {
+            unsubscribe();
+            unsubscribe = null;
+        }
+
+        try {
+            if (mode === 'Driver') {
+                // Query rides where the current user is the driver
+                const ridesQuery = query(
+                    collection(db, 'rides'),
+                    where('driver_id', '==', user.uid)
+                );
+
+                // Real-time updates with onSnapshot
+                unsubscribe = onSnapshot(ridesQuery, (querySnapshot) => {
                     const fetchedRides = querySnapshot.docs.map(doc => ({
                         id: doc.id,
                         ...doc.data()
                     }));
-                    
                     setRides(fetchedRides);
-                } else {
-                    // Fetch rides where the user is a passenger (implement this later)
-                    setRides([]); // Clear rides when switching to passenger mode
-                }
-            } catch (error) {
-                console.error('Error fetching rides:', error);
+                });
+            } else {
+                // Clear rides and stop listening in passenger mode
+                setRides([]);
+            }
+        } catch (error) {
+            console.error('Error fetching rides:', error);
+        }
+    };
+
+    // Effect to handle data fetching and cleanup
+    useEffect(() => {
+        fetchRides();
+
+        // Cleanup listener on unmount
+        return () => {
+            if (unsubscribe) {
+                unsubscribe();
             }
         };
-
-        fetchRides();
     }, [mode]);
+
+    // useEffect(() => {
+    //     fetchRides();
+    // }, [mode]);
+
+    // useEffect(() => {
+    //     fetchRides();
+    // }, []);
     const colors = [
         'rgba(250, 100, 100, 0.3)', // Red
         'rgba(255, 217, 61, 0.25)',  // Yellow

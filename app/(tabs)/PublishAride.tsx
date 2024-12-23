@@ -1,5 +1,5 @@
 import React, { useEffect, useState , } from "react";
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, ScrollView } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { getAuth } from "firebase/auth";
@@ -95,6 +95,7 @@ export default function PublishRide() {
 };
   return (
     <View style={styles.container}>
+      <ScrollView>
          <View style={styles.ss_container}>
          <Text style={styles.greeting}>Hello, {userName}</Text>
       <Text style={styles.title}>{isEditing ? 'Update Ride' : 'Publish Ride'}</Text>
@@ -167,6 +168,7 @@ export default function PublishRide() {
                <Text style={styles.buttonText} onPress={handlePublishRide}>{isEditing ? 'Update Ride' : 'Publish Ride'}</Text>
       </TouchableOpacity>
   </View>
+  </ScrollView>
     </View>
 
     
