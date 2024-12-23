@@ -20,8 +20,9 @@ const EditProfileScreen = () => {
       if (user) {
         const userDoc = await getDoc(doc(db, 'users', user.uid));
         const userData = userDoc.data();
+        console.log(userData)
         if (userData) {
-          setFullName(userData.fullName || '');
+          setFullName(userData.fullName || userData.name || '');
           setEmail(userData.email || '');
           setPhoneNumber(userData.phoneNumber || '');
           setImage(userData.image || '');

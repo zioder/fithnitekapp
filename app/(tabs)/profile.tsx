@@ -6,6 +6,8 @@ import { useNavigation } from '@react-navigation/native';
 import { router } from 'expo-router';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { auth } from '../firebaseConfig';
+import { doc, getDoc , getFirestore} from 'firebase/firestore';
+
 
 const handleLogout = () => {
   signOut(auth).then(() => {
@@ -19,10 +21,17 @@ const handleLogout = () => {
 
 const profile = () => {
   const [fullName, setFullName] = useState('Abdessayed Ala');
-  const [image, setImage] = useState(''); 
+   const [lastSet, setLastSet] = useState('');
+    const [email, setEmail] = useState('');
+    const [phoneNumber, setPhoneNumber] = useState('');
+    const [image, setImage] = useState(''); // Placeholder image URL
+
+      const db = getFirestore();
+    
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
+        
         // Assuming the user's display name is stored in the auth object
         setFullName(user.displayName || 'Abdessayed Ala');
       }
@@ -30,6 +39,27 @@ const profile = () => {
 
     return () => unsubscribe();
   }, []);
+  useEffect(() => {
+      const fetchUserData = async () => {
+        const user = auth.currentUser;
+        if (user) {
+          const userDoc = await getDoc(doc(db, 'users', user.uid));
+          const userData = userDoc.data();
+          console.log(userData)
+          if (userData) {
+            setFullName(userData.fullName || userData.name || '');
+            setEmail(userData.email || '');
+            setPhoneNumber(userData.phoneNumber || '');
+            setImage(userData.image || '');
+            setLastSet(userData.lastSet || '');
+          }
+        }
+      };
+  
+      fetchUserData();
+    }, []);
+
+  
   return (
     <View style={styles.container}>
     <View style={styles.profilePictureContainer}>
