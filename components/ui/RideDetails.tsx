@@ -3,7 +3,8 @@ import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 
 type RideDetailsProps = {
     name: string;
-    dateTime: string;
+    date: string;
+    time : string ; 
     from: string;
     to: string;
     description: string;
@@ -13,7 +14,7 @@ type RideDetailsProps = {
     onEdit?: () => void;
 };
 
-function RideDetails({ name, dateTime, from, to, description, style , personal,seats,onEdit }: RideDetailsProps) {
+function RideDetails({ name, date,time, from, to, description, style , personal,seats,onEdit }: RideDetailsProps) {
     return (
         <View style={[styles.card, style]}>
             {!personal && <View style={styles.row}>
@@ -23,16 +24,16 @@ function RideDetails({ name, dateTime, from, to, description, style , personal,s
                 </View>
             </View>}
             <View style={styles.details}>
-                <Text style={styles.detailText}>Date & time: <Text style={styles.value}>{dateTime}</Text></Text>
+                <Text style={styles.detailText}>Date & time: <Text style={styles.value}>{date} {time}</Text></Text>
                 <Text style={styles.detailText}>From To: <Text style={styles.value}>{from} &gt; {to}</Text></Text>
                 <Text style={styles.detailText}>Description: <Text style={styles.value}>{description}</Text></Text>
                 <Text style={styles.detailText}>Seats available <Text style={styles.value}>{seats}</Text></Text>
             </View>
-            <TouchableOpacity 
+            {personal && <TouchableOpacity 
                 style={styles.editButton}
                 onPress={onEdit}>
                 <Text style={styles.editButtonText}>Edit Ride</Text>
-            </TouchableOpacity>
+            </TouchableOpacity>}
 
             
         </View>

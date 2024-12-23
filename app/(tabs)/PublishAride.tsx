@@ -32,6 +32,8 @@ export default function PublishRide() {
         const userData = userDoc.data();
         if (userData && userData.fullName) {
           setUserName(userData.fullName);
+        } else if (userData && userData.name) {
+          setUserName(userData.name);
         }
       }
     };
@@ -75,17 +77,18 @@ export default function PublishRide() {
             const rideData = {
                 ride_id: isEditing ? rideId : `${user.uid}_${Date.now()}`,
                 driver_id: user.uid,
+                driver_name : userName,
                 origin: from,
                 destination: to,
                 radius_tolerance: 5.0,
                 seats_available: seats,
-                date_time: date.toISOString(),
+                date: date.toLocaleDateString('en-US', { day: '2-digit', month: '2-digit', year: 'numeric' }),
+                time: date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }),
                 created_at: isEditing ? new Date().toISOString() : new Date().toISOString(),
                 description: description,
             };
 
             await setDoc(doc(db, 'rides', rideData.ride_id), rideData);
-            Alert.alert('Success', `Ride ${isEditing ? 'updated' : 'published'} successfully!`);
             router.back();
         } catch (error) {
             console.error('Error publishing ride', error);

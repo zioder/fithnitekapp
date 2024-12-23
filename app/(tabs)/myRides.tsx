@@ -126,7 +126,8 @@ const PublishedRides = () => {
                         <RideDetails
                             key={ride.id}
                             name={auth.currentUser?.displayName || "User"}
-                            dateTime={formatDateTime(ride.date_time)}
+                            date={ride.date}
+                            time={ride.time}
                             from={ride.origin}
                             to={ride.destination}
                             description={ride.description || "No description provided"}

@@ -10,9 +10,9 @@ import {
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useFonts } from 'expo-font';
-import app from '../firebaseConfig';
 import {getAuth,signInWithEmailAndPassword,createUserWithEmailAndPassword} from 'firebase/auth';
 import { getFirestore, doc, setDoc } from 'firebase/firestore';
+import { app } from '../firebaseConfig';
 
 
 const SignUpScreen = () => {

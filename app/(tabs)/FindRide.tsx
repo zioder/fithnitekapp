@@ -1,21 +1,65 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import DateTimePicker from "@react-native-community/datetimepicker";
+import DateTimePicker, { DateTimePickerEvent } from "@react-native-community/datetimepicker";
 import { router } from "expo-router";
+import { getAuth } from 'firebase/auth';
 
 export default function FindRide() {
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
   const [date, setDate] = useState(new Date());
+  const [showDatePicker, setShowDatePicker] = useState(false);
+    const [showTimePicker, setShowTimePicker] = useState(false);
   const [seats, setSeats] = useState(1);
   const [showPicker, setShowPicker] = useState(false);
 
-  const handleDateChange = (_: any, selectedDate?: Date | undefined) => {
-    setShowPicker(false);
-    if (selectedDate) {
-      setDate(selectedDate);
+  const handleDateChange = (event: DateTimePickerEvent, date?: Date | undefined)=> {
+      console.log(date?.toISOString())
+      setShowDatePicker(false);
+  
+      if (date) {
+        setDate(date);
+  
+      }
+      if (event.type == 'dismissed'){
+        setShowDatePicker(false);
+      }
+    };
+
+    
+  
+
+  const handleSearch = () => {
+
+    if (!from || !to || from.trim() === "" || to.trim() === "") {
+      Alert.alert('Error', 'Both origin and destination must be filled');
+      return;
+  }
+
+    const auth = getAuth();
+    const currentUser = auth.currentUser;
+    
+    if (!currentUser) {
+      return;
     }
+
+    if (!from || !to || from.trim() === "" || to.trim() === "") {
+            Alert.alert('Error', 'Both origin and destination must be filled');
+            return;
+        }
+
+    // Pass search parameters to the publisheddrives screen
+    router.push({
+      pathname: '/publisheddrives',
+      params: {
+        from,
+        to,
+        date: date.toLocaleDateString(),
+        seats: seats.toString(),
+        userId: currentUser.uid
+      }
+    });
   };
 
   return (
@@ -36,17 +80,17 @@ export default function FindRide() {
         onChangeText={setTo}
       />
      <Text style={styles.label}>When</Text>
-      <TouchableOpacity style={styles.input} onPress={() => setShowPicker(true)}>
-        <Text>{date.toLocaleString()}</Text>
+      <TouchableOpacity style={styles.input} onPress={() => setShowDatePicker(true)}>
+        <Text>{date.toLocaleDateString("en-US")}</Text>
       </TouchableOpacity>
-      {showPicker && (
-        <DateTimePicker
-          value={date}
-          mode="datetime"
-          display="default"
-          onChange={handleDateChange}
-        />
-      )}
+      {showDatePicker && (
+          <DateTimePicker
+            value={date}
+            mode="date"
+            display="default"
+            onChange={handleDateChange}
+          />
+        )}
 
         <Text style={styles.label}>Seats needed?</Text>
         <View style={styles.seatControls}>
@@ -63,7 +107,7 @@ export default function FindRide() {
       </View>
       <View style={styles.button}>
       <TouchableOpacity >
-    <TouchableOpacity onPress={() => router.push('/publisheddrives')}>
+    <TouchableOpacity onPress={handleSearch} >
       <Text style={styles.buttonText}>Find Ride</Text>
     </TouchableOpacity>
   </TouchableOpacity>
