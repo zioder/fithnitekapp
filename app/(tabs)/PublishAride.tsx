@@ -1,234 +1,187 @@
-import React, { useEffect, useState , } from "react";
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, ScrollView } from "react-native";
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+  KeyboardAvoidingView,
+  Platform,
+} from "react-native";
+import MapView, { Marker, Circle } from "react-native-maps";
+import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import { Ionicons } from "@expo/vector-icons";
-import DateTimePicker from "@react-native-community/datetimepicker";
-import { getAuth } from "firebase/auth";
-import { doc, getDoc, getFirestore, setDoc } from "firebase/firestore";
-import { DateTimePickerEvent } from "@react-native-community/datetimepicker";
-import { router, useLocalSearchParams } from 'expo-router';
+
 export default function PublishRide() {
-  const params = useLocalSearchParams();
-  const isEditing = params.isEditing === 'true';
-  const rideId = params.rideId as string;
+  const [from, setFrom] = useState("");
+  const [fromCoords, setFromCoords] = useState({ latitude: 37.7749, longitude: -122.4194 });
+  const [to, setTo] = useState("");
+  const [toCoords, setToCoords] = useState({ latitude: 37.7749, longitude: -122.4194 });
+  const [radius, setRadius] = useState(5);
+  const [seats, setSeats] = useState(1);
+  const [description, setDescription] = useState("");
 
-  const [from, setFrom] = useState(params.origin as string || "");
-  const [to, setTo] = useState(params.destination as string || "");
-  const [date, setDate] = useState(params.dateTime ? new Date(params.dateTime as string) : new Date());
-
-  const [seats, setSeats] = useState(Number(params.seats) || 1);
-  const [showDatePicker, setShowDatePicker] = useState(false);
-  const [showTimePicker, setShowTimePicker] = useState(false);
-  const [description, setDescription] = useState(params.description as string || "");
-  const [userName, setUserName] = useState("");
-
-  const auth = getAuth();
-  const db = getFirestore();
-
-  useEffect(() => {
-    const fetchUserName = async () => {
-      const user = auth.currentUser;
-      if (user) {
-        const userDoc = await getDoc(doc(db, 'users', user.uid));
-        const userData = userDoc.data();
-        if (userData && userData.fullName) {
-          setUserName(userData.fullName);
-        } else if (userData && userData.name) {
-          setUserName(userData.name);
-        }
-      }
-    };
-
-    fetchUserName();
-  }, []);
-
-  const handleDateChange = (event: DateTimePickerEvent, date?: Date | undefined)=> {
-    console.log(date?.toISOString())
-    setShowDatePicker(false);
-
-    if (date) {
-      setDate(date);
-
-    }
-    if (event.type == 'dismissed'){
-      setShowDatePicker(false);
-    }
-  };
-  const handleTimeChange = (event: DateTimePickerEvent, date?: Date | undefined)=> {
-    console.log(date)
-    setShowTimePicker(false);
-
-    if (date) {
-      setDate(date);
-
-    }
-    if (event.type == 'dismissed'){
-      setShowTimePicker(false);
-    }
-  };
-
-  const handlePublishRide = async () => {
-    if (!from || !to) {
-        Alert.alert('Error', 'Both origin and destination must be filled');
-        return;
-    }
-    const user = auth.currentUser;
-    if (user) {
-        try {
-            const rideData = {
-                ride_id: isEditing ? rideId : `${user.uid}_${Date.now()}`,
-                driver_id: user.uid,
-                driver_name : userName,
-                origin: from,
-                destination: to,
-                radius_tolerance: 5.0,
-                seats_available: seats,
-                date: date.toLocaleDateString('en-US', { day: '2-digit', month: '2-digit', year: 'numeric' }),
-                time: date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }),
-                created_at: isEditing ? new Date().toISOString() : new Date().toISOString(),
-                description: description,
-            };
-
-            await setDoc(doc(db, 'rides', rideData.ride_id), rideData);
-            router.back();
-        } catch (error) {
-            console.error('Error publishing ride', error);
-            Alert.alert('Error', `Failed to ${isEditing ? 'update' : 'publish'} ride`);
-        }
-    }
-};
   return (
-    <View style={styles.container}>
-      <ScrollView>
-         <View style={styles.ss_container}>
-         <Text style={styles.greeting}>Hello, {userName}</Text>
-      <Text style={styles.title}>{isEditing ? 'Update Ride' : 'Publish Ride'}</Text>
-      <Text style={styles.label}>Origin :</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Enter starting point"
-        value={from}
-        onChangeText={setFrom}
-      />
-      <Text style={styles.label}>Destination :</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Enter destination"
-        value={to}
-        onChangeText={setTo}
-      />
-     <Text style={styles.label}>Date :</Text>
-      <TouchableOpacity style={styles.input} onPress={() => setShowDatePicker(true)}>
-        <Text>{date.toLocaleDateString("en-US")}</Text>
-      </TouchableOpacity>
-      {showDatePicker && (
-          <DateTimePicker
-            value={date}
-            mode="date"
-            display="default"
-            onChange={handleDateChange}
-          />
-        )}
-        <Text style={styles.label}>Time :</Text>
-      <TouchableOpacity style={styles.input} onPress={() => setShowTimePicker(true)}>
-        <Text>{date.toLocaleTimeString("en-US", {
-  hour: "2-digit",
-  minute: "2-digit"
-})}</Text>
-      </TouchableOpacity>
-      {showTimePicker && (
-          <DateTimePicker
-            value={date}
-            mode="time"
-            display="default"
-            onChange={handleTimeChange}
-          />
-        )}
-        <Text style={styles.label}>Description :</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Ex : Light luggage , pets included.."
-        value={description}
-        onChangeText={setDescription}
-      />
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={{ flex: 1 }}
+    >
+      <View style={styles.container}>
+        <Text style={styles.title}>Publish Ride</Text>
 
-        <Text style={styles.label}>Seats Available?</Text>
-        <View style={styles.seatControls}>
-          <TouchableOpacity
-            onPress={() => setSeats(Math.max(1, seats - 1))}
-          >
-            <Ionicons name="remove-circle-outline" size={24} color="black" />
-          </TouchableOpacity>
-          <Text style={styles.seatCount}>{seats}</Text>
-          <TouchableOpacity onPress={() => setSeats(seats + 1)}>
-            <Ionicons name="add-circle-outline" size={24} color="black" />
-          </TouchableOpacity>
-          
+        <View style={styles.autocompleteContainer}>
+          <Text style={styles.label}>Origin:</Text>
+          <GooglePlacesAutocomplete
+            placeholder="Enter starting point"
+            onPress={(data, details = null) => {
+              const location = details?.geometry.location;
+              if (location) {
+                setFrom(data.description);
+                setFromCoords({ latitude: location.lat, longitude: location.lng });
+              }
+            }}
+            query={{ key: "AIzaSyB3Z_jPfdW98gdvUn25nOOBinXKvOYDhqU", language: "en" }}
+            fetchDetails
+            styles={{
+              container: { flex: 0 },
+              textInput: styles.input,
+              listView: styles.autocompleteList,
+              predefinedPlacesDescription: {
+                color: '#1faadb'
+              },
+            }}
+            enablePoweredByContainer={false}
+            minLength={2}
+          />
         </View>
-        
-      </View>
-      <View style={styles.button}>
-      <TouchableOpacity >
-               <Text style={styles.buttonText} onPress={handlePublishRide}>{isEditing ? 'Update Ride' : 'Publish Ride'}</Text>
-      </TouchableOpacity>
-  </View>
-  </ScrollView>
-    </View>
 
-    
+        <View style={styles.autocompleteContainer}>
+          <Text style={styles.label}>Destination:</Text>
+          <GooglePlacesAutocomplete
+            placeholder="Enter destination"
+            onPress={(data, details = null) => {
+              const location = details?.geometry.location;
+              if (location) {
+                setTo(data.description);
+                setToCoords({ latitude: location.lat, longitude: location.lng });
+              }
+            }}
+            query={{ key: "AIzaSyB3Z_jPfdW98gdvUn25nOOBinXKvOYDhqU", language: "en" }}
+            fetchDetails
+            styles={{
+              container: { flex: 0 },
+              textInput: styles.input,
+              listView: styles.autocompleteList,
+              predefinedPlacesDescription: {
+                color: '#1faadb'
+              },
+            }}
+            enablePoweredByContainer={false}
+            minLength={2}
+          />
+        </View>
+
+        <MapView
+          style={styles.map}
+          region={{
+            latitude: fromCoords.latitude,
+            longitude: fromCoords.longitude,
+            latitudeDelta: 0.1,
+            longitudeDelta: 0.1,
+          }}
+        >
+          <Marker coordinate={fromCoords} title="Origin" />
+          <Marker coordinate={toCoords} title="Destination" />
+          <Circle
+            center={fromCoords}
+            radius={radius * 1000}
+            strokeColor="rgba(255,0,0,0.5)"
+            fillColor="rgba(255,0,0,0.2)"
+          />
+        </MapView>
+
+        <View style={styles.bottomContainer}>
+          <Text style={styles.label}>Pickup Radius (km):</Text>
+          <TextInput
+            style={styles.input}
+            keyboardType="numeric"
+            value={radius.toString()}
+            onChangeText={(value) => setRadius(Number(value))}
+          />
+
+          <Text style={styles.label}>Available Seats:</Text>
+          <View style={styles.seatControls}>
+            <TouchableOpacity
+              onPress={() => setSeats(Math.max(1, seats - 1))}
+            >
+              <Ionicons name="remove-circle-outline" size={24} color="black" />
+            </TouchableOpacity>
+            <Text style={styles.seatCount}>{seats}</Text>
+            <TouchableOpacity onPress={() => setSeats(seats + 1)}>
+              <Ionicons name="add-circle-outline" size={24} color="black" />
+            </TouchableOpacity>
+          </View>
+
+          <Text style={styles.label}>Description:</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="E.g., Light luggage, pets included..."
+            value={description}
+            onChangeText={setDescription}
+          />
+
+          <TouchableOpacity style={styles.button}>
+            <Text style={styles.buttonText}>Publish Ride</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    </KeyboardAvoidingView>
   );
 }
 
 const styles = StyleSheet.create({
-  greeting: {
-    fontSize: 20,
-    marginBottom: 10,
-  },
-    ss_container: {
-        flex: 1,
-        padding: 20,
-        justifyContent:"center", // Center vertically
-        alignItems: "stretch", // Stretch components horizontally
-        backgroundColor: "#fff",
-    },
-    lineBreak: {
-        height: 20, // Space to simulate a line break
-      },
   container: {
     flex: 1,
     padding: 20,
-    justifyContent:"space-around", // Center vertically
-    alignItems: "stretch", // Stretch components horizontally
-    backgroundColor: "#fff",
+  },
+  autocompleteContainer: {
+    zIndex: 2,
+    marginBottom: 10,
+  },
+  bottomContainer: {
+    zIndex: 1,
   },
   title: {
-    fontSize: 34,
+    fontSize: 24,
     fontWeight: "bold",
-    marginBottom: 40,
+    marginBottom: 20,
   },
   label: {
-    fontSize: 15,
-    fontWeight: "bold",
-    marginBottom: 20,
+    fontSize: 16,
+    marginBottom: 10,
   },
   input: {
-    backgroundColor: "#f0f0f0", // Light gray background
     borderWidth: 1,
-    borderColor: "#ccc", // Optional border
-    borderRadius: 8,
-    padding: 15, // Increase padding for a larger input
+    borderColor: "#ccc",
+    borderRadius: 5,
+    padding: 10,
     marginBottom: 20,
-    fontSize: 18, // Bigger font size
-    width: "100%", // Stretch to full width
   },
-  seatContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
+  autocompleteList: {
+    backgroundColor: '#FFFFFF',
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 5,
+  },
+  map: {
+    height: 300,
     marginBottom: 20,
+    zIndex: 1,
   },
   seatControls: {
     flexDirection: "row",
     alignItems: "center",
+    marginBottom: 20,
   },
   seatCount: {
     fontSize: 16,
@@ -236,14 +189,12 @@ const styles = StyleSheet.create({
   },
   button: {
     backgroundColor: "#FF5A5F",
-    paddingVertical: 15,
-    borderRadius: 24,
+    padding: 15,
+    borderRadius: 10,
     alignItems: "center",
-    marginTop: 50, // Space above the button
   },
   buttonText: {
     color: "#fff",
     fontSize: 16,
-    fontWeight: "bold",
   },
 });

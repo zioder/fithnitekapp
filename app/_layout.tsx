@@ -7,6 +7,8 @@ import { useEffect, useState } from 'react';
 import { useColorScheme } from 'react-native';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import React from 'react';
+import 'react-native-get-random-values'
+
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
